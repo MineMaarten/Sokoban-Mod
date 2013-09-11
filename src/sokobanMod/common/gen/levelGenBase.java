@@ -38,11 +38,6 @@ public class levelGenBase{
     // possible to generate here, the method returns 0.
     public static int canGenerateHereAndClear(World world, int generationMethod, int[] entranceCoords, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
 
-        if(generationMethod != generateItem && flatWorld(world, minX, minZ)) return 0;// disable
-                                                                                      // worldgen
-                                                                                      // on
-                                                                                      // flatworlds.
-
         if(generationMethod == generateUnderground) {
             // underground levels have to collide with caves to be allowed to
             // generate
@@ -88,20 +83,6 @@ public class levelGenBase{
             }
         }
         return minY;
-    }
-
-    private static boolean flatWorld(World world, int baseX, int baseZ){
-        for(int i = 0; i < 100; i++) { // check 100 blocks between level 10 and
-                                       // 20, if they arent stone or netherrack,
-                                       // we are on a flatworld
-            Random rand = new Random();
-            int randX = baseX + rand.nextInt(50);
-            int randY = 10 + rand.nextInt(10);
-            int randZ = baseZ + rand.nextInt(50);
-            int blockID = world.getBlockId(randX, randY, randZ);
-            if(blockID == Block.stone.blockID || blockID == Block.netherrack.blockID) return false;
-        }
-        return true;
     }
 
     private static int getFlatLandLevel(World world, int minX, int minZ, int maxX, int maxZ){
