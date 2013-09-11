@@ -1,6 +1,7 @@
 package sokobanMod.common.gen.easy;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntitySign;
@@ -19,18 +20,11 @@ import sokobanMod.common.gen.levelGenBase;
  */
 
 public class easyLevel6Gen{
-    public static final int levelNumber = 0; //TODO: Set to right level number
+    public static final int levelNumber = 1005;
     public static final int[] levelBounds = {27, 9, 13};
     public static final int[] entranceCoords = {5, 2, 0, 5, 2, 13, 5, 3, 0, 5, 3, 13, 5, 4, 0, 5, 4, 13, 12, 2, 0, 12, 3, 0, 12, 4, 0, 16, 2, 13, 16, 3, 13, 16, 4, 13, 24, 2, 0, 24, 3, 0, 24, 4, 0, 27, 2, 10, 27, 3, 10, 27, 4, 10};
-    public static final ItemStack[] staticInventoryContents_1_3_12 = new ItemStack[]{new ItemStack(387, 1, 0)};
-    public static final WeightedRandomChestContent[] randomInventoryContents_1_3_12 = new WeightedRandomChestContent[]{/*new WeightedRandomChestContent(Item.stick.itemID, 0, 1, 3, 10)*/};
-    public static final ItemStack[] staticInventoryContents_13_2_6 = new ItemStack[]{new ItemStack(266, 9, 0), //
-    new ItemStack(369, 5, 0), //
-    new ItemStack(351, 3, 15), //
-    new ItemStack(388, 12, 0), //
-    new ItemStack(399, 6, 0), //
-    new ItemStack(264, 23, 0)};
-    public static final WeightedRandomChestContent[] randomInventoryContents_13_2_6 = new WeightedRandomChestContent[]{/*new WeightedRandomChestContent(Item.stick.itemID, 0, 1, 3, 10)*/};
+    public static final ItemStack[] staticInventoryContents_13_2_6 = new ItemStack[]{new ItemStack(Item.compass), new ItemStack(Item.map), new ItemStack(Item.book)};
+    public static final WeightedRandomChestContent[] randomInventoryContents_13_2_6 = new WeightedRandomChestContent[]{new WeightedRandomChestContent(Item.emerald.itemID, 0, 1, 3, 10), new WeightedRandomChestContent(Item.ingotIron.itemID, 0, 7, 10, 100), new WeightedRandomChestContent(Item.legsChain.itemID, 0, 1, 1, 40), new WeightedRandomChestContent(Item.bootsChain.itemID, 0, 1, 1, 40), new WeightedRandomChestContent(Item.plateChain.itemID, 0, 1, 1, 40), new WeightedRandomChestContent(Item.helmetChain.itemID, 0, 1, 1, 40)};
 
     public static boolean generate(World world, int generationMethod, int baseX, int baseY, int baseZ){
 
@@ -227,7 +221,9 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 3, baseZ + 12, Block.chest.blockID, 5); //tile.chest
         if(world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 12) instanceof TileEntityChest) {
             TileEntityChest teC = (TileEntityChest)world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 12);
-            levelGenBase.setChestContents(teC, staticInventoryContents_1_3_12, randomInventoryContents_1_3_12);
+            for(int i = 0; i < teC.getSizeInventory(); i++) {
+                teC.setInventorySlotContents(i, new ItemStack(Item.goldNugget));
+            }
         }
         levelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 3, baseZ + 13, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 4, baseZ + 0, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
@@ -1175,7 +1171,7 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 5, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 6, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 7, Block.bedrock.blockID, 0); //tile.bedrock
-        levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 8, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
+        levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 8, Block.bedrock.blockID, 0); //tile.bedrock
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 9, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 10, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 0, baseZ + 11, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
@@ -1188,7 +1184,6 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 4, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 5, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 6, SokobanMod.BlockTarget.blockID, 2); //tile.Target
-        levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 8, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 9, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 10, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 11, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
@@ -1254,7 +1249,7 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 5, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 6, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 7, Block.bedrock.blockID, 0); //tile.bedrock
-        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 8, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
+        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 8, Block.bedrock.blockID, 0); //tile.bedrock
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 9, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 10, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 0, baseZ + 11, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
@@ -1267,7 +1262,6 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 4, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 5, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 6, Block.bedrock.blockID, 0); //tile.bedrock
-        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 8, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 9, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 10, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 11, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks
@@ -2636,8 +2630,10 @@ public class easyLevel6Gen{
         levelGenBase.setBlockAndMetadata(world, baseX + 11, baseY + 3, baseZ + 12, Block.redstoneWire.blockID, 15); //tile.redstoneDust
         levelGenBase.setBlockAndMetadata(world, baseX + 11, baseY + 4, baseZ + 12, Block.torchRedstoneActive.blockID, 1); //tile.notGate
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 7, Block.redstoneWire.blockID, 0); //tile.redstoneDust
+        levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 1, baseZ + 8, Block.redstoneWire.blockID, 0); //tile.redstoneDust
         levelGenBase.setBlockAndMetadata(world, baseX + 12, baseY + 3, baseZ + 12, Block.redstoneWire.blockID, 14); //tile.redstoneDust
-        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 7, Block.redstoneWire.blockID, 0); //tile.redstoneDust
+        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 7, Block.redstoneRepeaterIdle.blockID, 12); //tile.diode
+        levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 1, baseZ + 8, Block.redstoneWire.blockID, 0); //tile.redstoneDust
         levelGenBase.setBlockAndMetadata(world, baseX + 13, baseY + 4, baseZ + 12, Block.torchRedstoneIdle.blockID, 5); //tile.notGate
         levelGenBase.setBlockAndMetadata(world, baseX + 22, baseY + 6, baseZ + 2, SokobanMod.BlockTargetBox.blockID, 0); //tile.Target Box
         if(world.getBlockTileEntity(baseX + 22, baseY + 6, baseZ + 2) instanceof TileEntityTargetBox) {
