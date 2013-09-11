@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
 import sokobanMod.common.gen.levelGenBase;
 import sokobanMod.common.gen.easy.easyLevel1Gen;
 import sokobanMod.common.gen.easy.easyLevel2Gen;
@@ -35,16 +36,18 @@ public class WorldGeneratorSokoban implements IWorldGenerator{
     private static final int[] undergroundLevel = new int[]{1002, 1003, 1004, 1005, 3001};
 
     @Override
-    public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider){
-        switch(world.provider.dimensionId){
-            case 0:
-                generateSurface(world, rand, chunkX * 16, chunkZ * 16);
-                break;
-            case -1:
-                generateNether(world, rand, chunkX * 16, chunkZ * 16);
-                break;
-            case 1:
-                generateEnd(world, rand, chunkX * 16, chunkZ * 16);
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider){
+        if(!(chunkGenerator instanceof ChunkProviderFlat)) { //don't generate on flatworlds
+            switch(world.provider.dimensionId){
+                case 0:
+                    generateSurface(world, random, chunkX * 16, chunkZ * 16);
+                    break;
+                case -1:
+                    generateNether(world, random, chunkX * 16, chunkZ * 16);
+                    break;
+                case 1:
+                    generateEnd(world, random, chunkX * 16, chunkZ * 16);
+            }
         }
     }
 
