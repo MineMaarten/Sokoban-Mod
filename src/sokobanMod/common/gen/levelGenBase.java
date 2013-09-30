@@ -11,34 +11,27 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
+import sokobanMod.common.LevelRegistrator;
 import sokobanMod.common.SokobanMod;
 import sokobanMod.common.SokobanUtils;
 import sokobanMod.common.TileEntityLootGenerator;
 
-public class levelGenBase{
+public class LevelGenBase{
     public static final int generateItem = 0;
     public static final int generateUnderground = 1;
     public static final int generateSurface = 2;
-
-    public static final int levelNumber = 0;
-    public static final int[] levelBounds = {};
-    public static final int[] entranceCoords = {};
 
     public static void setBlockAndMetadata(World world, int x, int y, int z, int blockID, int metadata){
         world.setBlock(x, y, z, blockID, metadata, 3);
 
     }
 
-    // child classes are going to override this function
-    public static boolean generate(World world, int generationMethod, int baseX, int baseY, int baseZ){
-        return false;
-    }
-
     // this method returns the base Y-level it generates at. If it isn't
     // possible to generate here, the method returns 0.
-    public static int canGenerateHereAndClear(World world, int generationMethod, int[] entranceCoords, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
-
-        if(generationMethod == generateUnderground) {
+    public static int canGenerateHereAndClear(World world, int levelNumber, ISokobanLevel.EnumGenerationMethod generationMethod, int minX, int minY, int minZ){
+        int[] entranceCoords = LevelRegistrator.getLevelEntrances(levelNumber);
+        int[] levelBounds = LevelRegistrator.getLevelBounds(levelNumber);
+        if(generationMethod == ISokobanLevel.EnumGenerationMethod.UNDERGROUND) {
             // underground levels have to collide with caves to be allowed to
             // generate
             boolean caveFound = false;
@@ -48,35 +41,23 @@ public class levelGenBase{
                                                                     // are
                                                                     // available
                                                                     // anymore
-                if(world.getBlockId(minX + entranceCoords[i], minY + entranceCoords[i + 1], minZ + entranceCoords[i + 2]) == 0) caveFound = true; // when
-                                                                                                                                                  // an
-                                                                                                                                                  // entrance
-                                                                                                                                                  // is
-                                                                                                                                                  // colliding
-                                                                                                                                                  // with
-                                                                                                                                                  // air,
-                                                                                                                                                  // a
-                                                                                                                                                  // cave
-                                                                                                                                                  // is
-                                                                                                                                                  // found!
+                if(world.getBlockId(minX + entranceCoords[i], minY + entranceCoords[i + 1], minZ + entranceCoords[i + 2]) == 0) caveFound = true;
             }
             if(!caveFound) return 0;
-        } else if(generationMethod == generateSurface) {
+        } else if(generationMethod == ISokobanLevel.EnumGenerationMethod.SURFACE) {
             // surface levels need a flat surface to generate on.
-            int yOffset = maxY - minY; // store the height of the level.
-            minY = getFlatLandLevel(world, minX, minZ, maxX, maxZ);
+            minY = getFlatLandLevel(world, minX, minZ, minX + levelBounds[0], minZ + levelBounds[1]);
             if(minY < 5) return 0;
-            maxY = minY + yOffset;
         }
 
         // Check if the potential level is going to collide with other levels
-        if(SokobanUtils.isCollidingWithLevel(world, minX, minY, minZ, maxX, maxY, maxZ)) return 0;
+        if(SokobanUtils.isCollidingWithLevel(world, minX, minY, minZ, minX + levelBounds[0], minY + levelBounds[1], minZ + levelBounds[2])) return 0;
 
         // when the generation code has passed all the requirements, clear the
         // level
-        for(int i = minX; i <= maxX; i++) {
-            for(int j = minY; j <= maxY; j++) {
-                for(int k = minZ; k <= maxZ; k++) {
+        for(int i = minX; i <= minX + levelBounds[0]; i++) {
+            for(int j = minY; j <= minY + levelBounds[1]; j++) {
+                for(int k = minZ; k <= minZ + levelBounds[2]; k++) {
                     setBlockAndMetadata(world, i, j, k, 0, 0); // Clear the
                                                                // level first
                 }
@@ -152,7 +133,7 @@ public class levelGenBase{
                 ItemStack[] stacks = ChestGenHooks.generateStacks(rand, weightedrandomchestcontent.theItemId, weightedrandomchestcontent.theMinimumChanceToGenerateItem, weightedrandomchestcontent.theMaximumChanceToGenerateItem);
 
                 for(ItemStack item : stacks) {
-                    if(item.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID) item.setItemDamage(rand.nextInt(SokobanMod.EASY_LEVEL_AMOUNT) + 1000);
+                    if(item.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID) item.setItemDamage(LevelRegistrator.getRandomNonTutorialLevel(rand));
                     lootGen.addLoot(item);
                 }
             }
