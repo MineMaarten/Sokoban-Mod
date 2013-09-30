@@ -7,6 +7,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
+import sokobanMod.common.LevelRegistrator;
 import sokobanMod.common.SokobanMod;
 import sokobanMod.common.SokobanUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -59,7 +60,7 @@ public class HandlerLevelPreviewRenderer{
         int[] rawLevelBounds;
         ForgeDirection sideHit = ForgeDirection.UP;
         if(event.currentItem.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID) {
-            rawLevelBounds = SokobanUtils.getLevelBounds(event.currentItem.getItemDamage());
+            rawLevelBounds = LevelRegistrator.getLevelBounds(event.currentItem.getItemDamage());
             levelBounds = rawLevelBounds.clone();
             levelBounds[0]++;
             levelBounds[1]++;
