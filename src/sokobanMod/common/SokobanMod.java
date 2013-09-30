@@ -8,6 +8,7 @@ import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import sokobanMod.common.gen.ISokobanLevel;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,7 +28,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  */
 
 // TODO increase version
-@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.5")
+@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.6")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"sokoban"}, packetHandler = PacketHandlerSokoban.class)
 public class SokobanMod{
 
@@ -59,11 +60,6 @@ public class SokobanMod{
 
     public static int CONFIG_SURFACE_GENERATION_CHANCE;
     public static int CONFIG_UNDERGROUND_GENERATION_CHANCE;
-
-    // the amount of levels for each catagory.
-    public static final int TUTORIAL_LEVEL_AMOUNT = 6;
-    public static final int EASY_LEVEL_AMOUNT = 6;
-    public static final int HARD_LEVEL_AMOUNT = 1;
 
     int BlockUnbreakableSolidsID;
     int BlockUnbreakableGlassesID;
@@ -185,14 +181,17 @@ public class SokobanMod{
             LanguageRegistry.addName(new ItemStack(BlockUnbreakableLamps, 1, i), "Indestructible " + SUBNAMES[i] + " Lamp");
         }
 
-        for(int i = 0; i < TUTORIAL_LEVEL_AMOUNT; i++) {
-            LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, i), "Tutorial Level #" + (i + 1) + " Generator");
-        }
-        for(int i = 0; i < EASY_LEVEL_AMOUNT; i++) {
-            LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, i + 1000), "Easy Level #" + (i + 1) + " Generator");
-        }
-        for(int i = 0; i < HARD_LEVEL_AMOUNT; i++) {
-            LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, i + 3000), "Hard Level #" + (i + 1) + " Generator");
+        for(ISokobanLevel level : LevelRegistrator.sokobanLevels) {
+            int levelNumber = level.getLevelNumber();
+            if(levelNumber < 1000) {
+                LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, levelNumber), "Tutorial Level #" + (levelNumber + 1) + " Generator");
+            } else if(levelNumber < 2000) {
+                LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, levelNumber), "Easy Level #" + (levelNumber % 1000 + 1) + " Generator");
+            } else if(levelNumber < 3000) {
+                LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, levelNumber), "Medium Level #" + (levelNumber % 1000 + 1) + " Generator");
+            } else {
+                LanguageRegistry.addName(new ItemStack(ItemLevelGeneratorTutorial, 1, levelNumber), "Hard Level #" + (levelNumber % 1000 + 1) + " Generator");
+            }
         }
 
         LanguageRegistry.addName(BlockTargetBox, "Target Box");
