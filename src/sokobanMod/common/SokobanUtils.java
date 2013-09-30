@@ -8,19 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import sokobanMod.common.gen.easy.easyLevel1Gen;
-import sokobanMod.common.gen.easy.easyLevel2Gen;
-import sokobanMod.common.gen.easy.easyLevel3Gen;
-import sokobanMod.common.gen.easy.easyLevel4Gen;
-import sokobanMod.common.gen.easy.easyLevel5Gen;
-import sokobanMod.common.gen.easy.easyLevel6Gen;
-import sokobanMod.common.gen.hard.hardLevel1Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel1Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel2Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel3Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel4Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel5Gen;
-import sokobanMod.common.gen.tutorial.tutorialLevel6Gen;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
@@ -31,41 +18,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  */
 
 public class SokobanUtils{
-    public static int[] getLevelBounds(int levelNumber){
-        switch(levelNumber){
-            case 0:
-                return tutorialLevel1Gen.levelBounds;
-            case 1:
-                return tutorialLevel2Gen.levelBounds;
-            case 2:
-                return tutorialLevel3Gen.levelBounds;
-            case 3:
-                return tutorialLevel4Gen.levelBounds;
-            case 4:
-                return tutorialLevel5Gen.levelBounds;
-            case 5:
-                return tutorialLevel6Gen.levelBounds;
-
-            case 1000:
-                return easyLevel1Gen.levelBounds;
-            case 1001:
-                return easyLevel2Gen.levelBounds;
-            case 1002:
-                return easyLevel3Gen.levelBounds;
-            case 1003:
-                return easyLevel4Gen.levelBounds;
-            case 1004:
-                return easyLevel5Gen.levelBounds;
-            case 1005:
-                return easyLevel6Gen.levelBounds;
-
-            case 3000:
-                return hardLevel1Gen.levelBounds;
-            default:
-                return easyLevel1Gen.levelBounds;
-
-        }
-    }
 
     public static int determineOrientation(EntityPlayer par4EntityPlayer){
         return MathHelper.floor_double(par4EntityPlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
