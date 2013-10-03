@@ -36,6 +36,7 @@ public class ItemLevelGeneratorTutorial extends Item{
     public String getItemDisplayName(ItemStack is){
         if(is.getItemDamage() < 1000) return "Tutorial Level #" + (is.getItemDamage() + 1) + " Generator";
         if(is.getItemDamage() < 2000) return "Easy Level #" + (is.getItemDamage() - 999) + " Generator";
+        if(is.getItemDamage() < 3000) return "Medium Level #" + (is.getItemDamage() - 1999) + " Generator";
         return "Hard Level #" + (is.getItemDamage() - 2999) + " Generator";
     }
 

@@ -14,6 +14,7 @@ import sokobanMod.common.gen.easy.EasyLevel4Gen;
 import sokobanMod.common.gen.easy.EasyLevel5Gen;
 import sokobanMod.common.gen.easy.EasyLevel6Gen;
 import sokobanMod.common.gen.hard.HardLevel1Gen;
+import sokobanMod.common.gen.medium.MediumLevel1Gen;
 import sokobanMod.common.gen.tutorial.TutorialLevel1Gen;
 import sokobanMod.common.gen.tutorial.TutorialLevel2Gen;
 import sokobanMod.common.gen.tutorial.TutorialLevel3Gen;
@@ -38,6 +39,8 @@ public class LevelRegistrator{
         sokobanLevels.add(new EasyLevel4Gen());
         sokobanLevels.add(new EasyLevel5Gen());
         sokobanLevels.add(new EasyLevel6Gen());
+
+        sokobanLevels.add(new MediumLevel1Gen());
 
         sokobanLevels.add(new HardLevel1Gen());
     }

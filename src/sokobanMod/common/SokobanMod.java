@@ -28,7 +28,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  */
 
 // TODO increase version
-@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.6")
+@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.7")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"sokoban"}, packetHandler = PacketHandlerSokoban.class)
 public class SokobanMod{
 
