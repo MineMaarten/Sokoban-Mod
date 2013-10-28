@@ -59,7 +59,7 @@ public class BlockTargetBox extends BlockContainer{
             case 5:
                 targetX--;
         }
-        if(world.getBlockId(targetX, targetY, targetZ) == 0 && !world.isRemote) {
+        if(world.isAirBlock(targetX, targetY, targetZ) && !world.isRemote) {
             world.playSoundEffect(x, y, z, "sokobanmod:movingBox", 1.0F, 1.0F);
             TileEntity TE = world.getBlockTileEntity(x, y, z);
             if(TE instanceof TileEntityTargetBox) {
