@@ -814,6 +814,7 @@ public class EasyLevel4Gen implements ISokobanLevel{
                                                                                                                             // Generator
         if(world.getBlockTileEntity(baseX + 3, baseY + 6, baseZ + 8) instanceof TileEntityLootGenerator) {
             TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 3, baseY + 6, baseZ + 8);
+            teLg.setAchievement(getLevelNumber());
             LevelGenBase.setLootGeneratorContents(teLg, staticInventoryContents_3_6_8, randomInventoryContents_3_6_8);
         }
         LevelGenBase.setBlockAndMetadata(world, baseX + 3, baseY + 6, baseZ + 9, SokobanMod.BlockUnbreakableSolids.blockID, 1); // tile.Unbreakable

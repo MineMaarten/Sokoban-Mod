@@ -1672,6 +1672,7 @@ public class EasyLevel3Gen implements ISokobanLevel{
                                                                                                                             // Generator
         if(world.getBlockTileEntity(baseX + 4, baseY + 4, baseZ + 3) instanceof TileEntityLootGenerator) {
             TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 4, baseY + 4, baseZ + 3);
+            teLg.setAchievement(getLevelNumber());
             LevelGenBase.setLootGeneratorContents(teLg, staticInventoryContents_4_4_3, randomInventoryContents_4_4_3);
         }
         LevelGenBase.setBlockAndMetadata(world, baseX + 4, baseY + 4, baseZ + 5, SokobanMod.BlockVaporizingBlock.blockID, 0); // tile.Vaporizing

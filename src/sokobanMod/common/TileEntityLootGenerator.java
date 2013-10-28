@@ -25,7 +25,7 @@ public class TileEntityLootGenerator extends TileEntity{
 
     public TileEntityLootGenerator(){
         iStackRewards = new ArrayList<ItemStack>();
-        achievement = 0;
+        achievement = -1;
     }
 
     public void addLoot(ItemStack iStack){
@@ -33,7 +33,7 @@ public class TileEntityLootGenerator extends TileEntity{
     }
 
     public void setAchievement(int achieve){
-        achievement = achieve + 1;
+        achievement = achieve;
     }
 
     public List<ItemStack> getLoot(){
@@ -42,12 +42,12 @@ public class TileEntityLootGenerator extends TileEntity{
 
     public void giveLoot(World world){
         if(!world.isRemote) {
-            /*
-             * if(achievement != 0){ EntityAchievementOrb orb = new
-             * EntityAchievementOrb(world, (double)this.xCoord +
-             * 0.5D,(double)this.yCoord + 0.5D,(double)this.zCoord + 0.5D,
-             * achievement - 1); world.spawnEntityInWorld(orb); }
-             */
+
+            if(achievement >= 0) {
+                EntityAchievementOrb orb = new EntityAchievementOrb(world, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, achievement);
+                world.spawnEntityInWorld(orb);
+            }
+
             for(int i = 0; i < iStackRewards.size(); i++) {
                 ItemStack iStackLoot = iStackRewards.get(i);
                 EntityItem entityLoot = new EntityItem(world, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, iStackLoot);

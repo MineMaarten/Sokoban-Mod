@@ -450,6 +450,7 @@ public class ItemLevelConverter extends Item{
                 try {
                     writer.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntityLootGenerator){" + NEW_LINE);
                     writer.write("\tTileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ");" + NEW_LINE);
+                    writer.write("\tteLg.setAchievement(getLevelNumber());" + NEW_LINE);
                     writer.write("\tLevelGenBase.setLootGeneratorContents(teLg, staticInventoryContents_" + offsetX + "_" + offsetY + "_" + offsetZ + ", randomInventoryContents_" + offsetX + "_" + offsetY + "_" + offsetZ + ");" + NEW_LINE + "}" + NEW_LINE);
 
                 } catch(IOException e) {

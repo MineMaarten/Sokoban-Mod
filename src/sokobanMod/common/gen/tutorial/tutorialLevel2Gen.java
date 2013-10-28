@@ -620,10 +620,10 @@ public class TutorialLevel2Gen implements ISokobanLevel{
                                                                                                                             // Generator
         if(world.getBlockTileEntity(baseX + 2, baseY + 5, baseZ + 8) instanceof TileEntityLootGenerator) {
             TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 2, baseY + 5, baseZ + 8);
+            teLg.setAchievement(getLevelNumber());
             teLg.addLoot(new ItemStack(SokobanMod.ItemLevelGeneratorTutorial.itemID, 1, 2)); // item.Level
                                                                                              // Generator
                                                                                              // Tutorial
-            teLg.setAchievement(getLevelNumber());
         }
         LevelGenBase.setBlockAndMetadata(world, baseX + 2, baseY + 5, baseZ + 10, SokobanMod.BlockUnbreakableSolids.blockID, 0); // tile.Unbreakable
                                                                                                                                  // Solid

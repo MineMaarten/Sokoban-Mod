@@ -47,19 +47,9 @@ public class PacketHandlerSokoban implements IPacketHandler{
             case giveAchievementID:
                 int achieve = dat.readInt();
                 EntityPlayer entityPlayer = (EntityPlayer)player;
-                switch(getLevelDifficulty(achieve)){
-                    case 0:
-                        entityPlayer.addStat(SokobanMod.achieveTutorial[getLevelNr(achieve)], 1);
-                }
+                entityPlayer.addStat(AchievementHandler.getAchieveFromLevel(achieve), 1);
+                break;
         }
-    }
-
-    public int getLevelNr(int itemDamage){
-        return itemDamage % 1000;
-    }
-
-    public int getLevelDifficulty(int itemDamage){
-        return itemDamage / 1000;
     }
 
     public static Packet spawnParticle(String particleName, double spawnX, double spawnY, double spawnZ, double spawnMotX, double spawnMotY, double spawnMotZ){
@@ -85,13 +75,13 @@ public class PacketHandlerSokoban implements IPacketHandler{
         return pkt;
     }
 
-    public static Packet giveAchievement(int achieve){
+    public static Packet giveLevelAchievement(int levelNumber){
         // System.out.println("particle effect packet made");
         ByteArrayOutputStream bos = new ByteArrayOutputStream(140);
         DataOutputStream dos = new DataOutputStream(bos);
         try {
             dos.writeInt(giveAchievementID);
-            dos.writeInt(achieve);
+            dos.writeInt(levelNumber);
         } catch(IOException e) {}
         Packet250CustomPayload pkt = new Packet250CustomPayload();
         pkt.channel = "sokoban";

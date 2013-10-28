@@ -136,6 +136,7 @@ public class MediumLevel1Gen implements ISokobanLevel{
         LevelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 3, baseZ + 17, SokobanMod.BlockLootGenerator.blockID, 0); //tile.Loot Generator
         if(world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 17) instanceof TileEntityLootGenerator) {
             TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 17);
+            teLg.setAchievement(getLevelNumber());
             LevelGenBase.setLootGeneratorContents(teLg, staticInventoryContents_1_3_17, randomInventoryContents_1_3_17);
         }
         LevelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 4, baseZ + 0, SokobanMod.BlockUnbreakableSolids.blockID, 0); //tile.Unbreakable Solid Blocks

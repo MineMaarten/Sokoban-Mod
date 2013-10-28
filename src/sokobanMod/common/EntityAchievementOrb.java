@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Sokoban Mod
@@ -19,29 +21,26 @@ public class EntityAchievementOrb extends EntityXPOrb{
         super(par1World, x, y, z, achievementNumber);
     }
 
-    private int getLevelDifficulty(){
-        return getXpValue() / 1000;
-    }
-
-    private int getLevelNr(){
-        return getXpValue() % 1000;
+    public EntityAchievementOrb(World par1World){
+        super(par1World);
     }
 
     @Override
     public void onCollideWithPlayer(EntityPlayer player){
         if(!worldObj.isRemote) {
-
-            switch(getLevelDifficulty()){
-                case 0:
-                    player.addStat(SokobanMod.achieveTutorial[getLevelNr()], 1);
-            }
-
-            PacketDispatcher.sendPacketToPlayer(PacketHandlerSokoban.giveAchievement(getXpValue()), (Player)player);
+            // player.addStat(AchievementHandler.getAchieveFromLevel(getXpValue()), 1);
+            PacketDispatcher.sendPacketToPlayer(PacketHandlerSokoban.giveLevelAchievement(getXpValue()), (Player)player);
 
             playSound("random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             player.onItemPickup(this, 1);
             setDead();
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getTextureByXP(){
+        return 3;
     }
 
 }

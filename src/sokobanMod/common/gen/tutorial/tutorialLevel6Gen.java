@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import sokobanMod.common.SokobanMod;
+import sokobanMod.common.TileEntityLootGenerator;
 import sokobanMod.common.TileEntityTargetBox;
 import sokobanMod.common.gen.ISokobanLevel;
 import sokobanMod.common.gen.LevelGenBase;
@@ -594,7 +595,10 @@ public class TutorialLevel6Gen implements ISokobanLevel{
                                                                                                                                  // Solid
                                                                                                                                  // Blocks
         LevelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 3, baseZ + 12, SokobanMod.BlockLootGenerator.blockID, 0); // tile.Loot
-                                                                                                                             // Generator
+        if(world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 12) instanceof TileEntityLootGenerator) {
+            TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 1, baseY + 3, baseZ + 12);
+            teLg.setAchievement(getLevelNumber());
+        } // Generator
         LevelGenBase.setBlockAndMetadata(world, baseX + 1, baseY + 3, baseZ + 13, SokobanMod.BlockUnbreakableSolids.blockID, 0); // tile.Unbreakable
                                                                                                                                  // Solid
                                                                                                                                  // Blocks

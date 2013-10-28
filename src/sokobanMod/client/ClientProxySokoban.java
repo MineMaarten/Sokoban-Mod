@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.entity.RenderFallingSand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import sokobanMod.common.CommonProxySokoban;
+import sokobanMod.common.EntityAchievementOrb;
 import sokobanMod.common.EntityFallingTargetBox;
 import sokobanMod.common.EntityMovingTargetBox;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -22,6 +23,8 @@ public class ClientProxySokoban extends CommonProxySokoban{
     public void registerRenders(){
         RenderingRegistry.registerEntityRenderingHandler(EntityFallingTargetBox.class, new RenderFallingSand());
         RenderingRegistry.registerEntityRenderingHandler(EntityMovingTargetBox.class, new RenderFallingSand());
+        RenderingRegistry.registerEntityRenderingHandler(EntityAchievementOrb.class, new RenderAchievementOrb());
+
         MinecraftForge.EVENT_BUS.register(new HandlerLevelPreviewRenderer());
     }
 

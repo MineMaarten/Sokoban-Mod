@@ -745,6 +745,7 @@ public class HardLevel1Gen implements ISokobanLevel{
         LevelGenBase.setBlockAndMetadata(world, baseX + 5, baseY + 6, baseZ + 12, SokobanMod.BlockLootGenerator.blockID, 0); //tile.Loot Generator
         if(world.getBlockTileEntity(baseX + 5, baseY + 6, baseZ + 12) instanceof TileEntityLootGenerator) {
             TileEntityLootGenerator teLg = (TileEntityLootGenerator)world.getBlockTileEntity(baseX + 5, baseY + 6, baseZ + 12);
+            teLg.setAchievement(getLevelNumber());
             LevelGenBase.setLootGeneratorContents(teLg, staticInventoryContents_5_6_12, randomInventoryContents_5_6_12);
         }
         LevelGenBase.setBlockAndMetadata(world, baseX + 5, baseY + 6, baseZ + 13, SokobanMod.BlockRedstoneRemover.blockID, 2); //tile.Redstone Remover

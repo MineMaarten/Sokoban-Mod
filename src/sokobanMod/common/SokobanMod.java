@@ -4,8 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
-import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import sokobanMod.common.gen.ISokobanLevel;
@@ -28,7 +26,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  */
 
 // TODO increase version
-@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.7")
+@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.8")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"sokoban"}, packetHandler = PacketHandlerSokoban.class)
 public class SokobanMod{
 
@@ -51,10 +49,6 @@ public class SokobanMod{
 
     public static Item ItemLevelConverter;
     public static Item ItemLevelGeneratorTutorial;
-
-    public static AchievementPage achievementPageSokoban;
-
-    public static Achievement achieveTutorial[];
 
     public static WorldGeneratorSokoban worldGenerator;
 
@@ -124,7 +118,7 @@ public class SokobanMod{
         ItemLevelConverter = new ItemLevelConverter(ItemLevelConverterID).setUnlocalizedName("Level Converter").setCreativeTab(tabSokobanMod);
         ItemLevelGeneratorTutorial = new ItemLevelGeneratorTutorial(ItemLevelGeneratorTutorialID).setUnlocalizedName("Level Generator Tutorial").setCreativeTab(tabSokobanModLevels);
 
-        // registerAchievements();
+        AchievementHandler.init();
         gameRegisters();
 
         proxy.registerSoundHandler();
@@ -136,11 +130,11 @@ public class SokobanMod{
 
         languageRegisters();
 
-        proxy.registerRenders();
-
         EntityRegistry.registerGlobalEntityID(EntityFallingTargetBox.class, "Falling Target Box", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerGlobalEntityID(EntityMovingTargetBox.class, "Moving Target Box", EntityRegistry.findGlobalUniqueEntityId());
-        EntityRegistry.registerGlobalEntityID(EntityAchievementOrb.class, "Achievement Orb", EntityRegistry.findGlobalUniqueEntityId());
+        // EntityRegistry.registerGlobalEntityID(EntityAchievementOrb.class, "Achievement Orb", EntityRegistry.findGlobalUniqueEntityId());
+        EntityRegistry.registerModEntity(EntityAchievementOrb.class, "Achievement Orb", 0, this, 200, 1, true);
+        proxy.registerRenders();
     }
 
     public void gameRegisters(){
