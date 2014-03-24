@@ -3,10 +3,8 @@ package sokobanMod.common;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.item.EntityFallingSand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,13 +19,15 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class BlockTargetBox extends BlockContainer{
+public class BlockTargetBox extends BlockFalling{
 
-    /** Do blocks fall instantly to where they stop or do they fall over time */
-    public static boolean fallInstantly = false;
+    // public static boolean fallInstantly = false;
 
-    public BlockTargetBox(int par1, Material par3Material){
-        super(par1, par3Material);
+	@SideOnly(Side.CLIENT)
+	protected IIcon blockIcon;
+	
+    public BlockTargetBox(Material material){
+        super(material);
         setHardness(0.0F);
     }
 
