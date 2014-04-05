@@ -8,11 +8,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import sokobanMod.common.network.PacketPipeline;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -64,8 +66,9 @@ public class SokobanMod{
 
     int ItemLevelConverterID;
     int ItemLevelGeneratorTutorialID;
-
     
+    /** Updated PacketHandler from Forge wiki tutorial: http://www.minecraftforge.net/wiki/Netty_Packet_Handling */
+	public static final PacketPipeline packetPipeline = new PacketPipeline();
     
     @EventHandler
     public void PreInit(FMLPreInitializationEvent event){
@@ -126,8 +129,8 @@ public class SokobanMod{
         // Item.itemsList[BlockUnbreakableLampsID] = new ItemBlockUnbreakableLamps(BlockUnbreakableLampsID - 256).setUnlocalizedName("Unbreakable Lamp Blocks");
         // Item.itemsList[BlockTargetID] = new ItemBlockTarget(BlockTargetID - 256).setUnlocalizedName("Target Blocks");
 
-        ItemLevelConverter = new ItemLevelConverter(ItemLevelConverterID).setUnlocalizedName("Level Converter").setCreativeTab(tabSokobanMod);
-        ItemLevelGeneratorTutorial = new ItemLevelGeneratorTutorial(ItemLevelGeneratorTutorialID).setUnlocalizedName("Level Generator Tutorial").setCreativeTab(tabSokobanModLevels);
+        ItemLevelConverter = new ItemLevelConverter().setUnlocalizedName("Level Converter").setCreativeTab(tabSokobanMod);
+        ItemLevelGeneratorTutorial = new ItemLevelGeneratorTutorial().setUnlocalizedName("Level Generator Tutorial").setCreativeTab(tabSokobanModLevels);
 
         AchievementHandler.init();
         gameRegisters();
@@ -146,8 +149,15 @@ public class SokobanMod{
         // EntityRegistry.registerGlobalEntityID(EntityAchievementOrb.class, "Achievement Orb", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityAchievementOrb.class, "Achievement Orb", 0, this, 200, 1, true);
         proxy.registerRenders();
+        packetPipeline.initialise();
     }
-
+    
+    @EventHandler
+    public void modsLoaded(FMLPostInitializationEvent event)
+    {
+    	packetPipeline.postInitialise();
+    }
+    
     public void gameRegisters(){
 
         // new blocks
