@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import sokobanMod.common.network.PacketSpawnParticle;
 
 /**
  * Sokoban Mod
@@ -85,8 +85,10 @@ public class TileEntityLootGenerator extends TileEntity{
     }
 
     /**
-     * Reads a tile entity from NBT.
+     * TODO
+     * I have no idea if I did this correctly (the updated read from NBT is below the deprecated one.
      */
+    /*
     @Override
     public void readFromNBT(NBTTagCompound par1NBTTagCompound){
         int rewardAmount;
@@ -100,8 +102,26 @@ public class TileEntityLootGenerator extends TileEntity{
             iStackRewards.add(ItemStack.loadItemStackFromNBT(var4));
         }
     }
-
+    */
+    
+    /**
+     * Reads a tile entity from NBT.
+     */
+    @Override
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound){
+        int rewardAmount;
+        super.readFromNBT(par1NBTTagCompound);
+        achievement = par1NBTTagCompound.getInteger("achievement");
+        NBTTagList var2 = (NBTTagList) par1NBTTagCompound.getTag("Items");
+        rewardAmount = par1NBTTagCompound.getInteger("rewardAmount");
+        for(int i = 0; i < rewardAmount; i++) {
+            NBTTagCompound var4 = (NBTTagCompound)var2.getCompoundTagAt(i);
+            //int var5 = var4.getByte("Slot") & 255;
+            iStackRewards.add(ItemStack.loadItemStackFromNBT(var4));
+        }
+    }
+    
     private void spawnParticle(String string, double g, double h, double i, double d, double e, double f){
-        PacketDispatcher.sendPacketToAllPlayers(PacketHandlerSokoban.spawnParticle(string, g, h, i, d, e, f));
+    	SokobanMod.packetPipeline.sendToAll(new PacketSpawnParticle(string, g, h, i, d, e, f));
     }
 }
