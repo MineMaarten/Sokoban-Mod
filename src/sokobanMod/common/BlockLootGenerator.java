@@ -1,9 +1,11 @@
 package sokobanMod.common;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -19,26 +21,21 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockLootGenerator extends BlockContainer{
 
-    public BlockLootGenerator(int par1, Material par3Material){
-        super(par1, par3Material);
+    public BlockLootGenerator(Material par3Material){
+        super(par3Material);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister){
+    public void registerBlockIcons(IIconRegister par1IconRegister){
         blockIcon = par1IconRegister.registerIcon("sokobanMod:BlockLootGenerator");
     }
 
     @Override
-    public TileEntity createNewTileEntity(World par1World){
-        return new TileEntityLootGenerator();
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID){
-        if(blockID != 0 && world.isBlockIndirectlyGettingPowered(x, y, z) && getBottomInputStrength(world, x, y, z) > 0) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
-            world.setBlock(x, y, z, 0);
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
+        if(block != Blocks.air && world.isBlockIndirectlyGettingPowered(x, y, z) && getBottomInputStrength(world, x, y, z) > 0) {
+            TileEntity te = world.getTileEntity(x, y, z);
+            world.setBlock(x, y, z, Blocks.air);
             if(te != null && te instanceof TileEntityLootGenerator) {
                 TileEntityLootGenerator teLg = (TileEntityLootGenerator)te;
                 teLg.giveLoot(world);
@@ -54,7 +51,7 @@ public class BlockLootGenerator extends BlockContainer{
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float par7, float par8, float par9){
         ItemStack playerStack = player.inventory.getCurrentItem();
         if(playerStack != null) {// if the player currently is holding something
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te != null && te instanceof TileEntityLootGenerator) {
                 TileEntityLootGenerator teLg = (TileEntityLootGenerator)te;
                 teLg.addLoot(playerStack.copy());
@@ -64,5 +61,11 @@ public class BlockLootGenerator extends BlockContainer{
         }
         return false;
     }
+
+	@Override
+	public TileEntity createNewTileEntity(World var1, int var2) {
+		// TODO Auto-generated method stub
+		return new TileEntityLootGenerator();
+	}
 
 }

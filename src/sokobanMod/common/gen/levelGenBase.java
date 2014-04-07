@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandom;
@@ -16,13 +17,13 @@ import sokobanMod.common.SokobanMod;
 import sokobanMod.common.SokobanUtils;
 import sokobanMod.common.TileEntityLootGenerator;
 
-public class LevelGenBase{
+public class levelGenBase{
     public static final int generateItem = 0;
     public static final int generateUnderground = 1;
     public static final int generateSurface = 2;
 
-    public static void setBlockAndMetadata(World world, int x, int y, int z, int blockID, int metadata){
-        world.setBlock(x, y, z, blockID, metadata, 3);
+    public static void setBlockAndMetadata(World world, int x, int y, int z, Block block, int metadata){
+        world.setBlock(x, y, z, block, metadata, 3);
 
     }
 
@@ -41,7 +42,7 @@ public class LevelGenBase{
                                                                     // are
                                                                     // available
                                                                     // anymore
-                if(world.getBlockId(minX + entranceCoords[i], minY + entranceCoords[i + 1], minZ + entranceCoords[i + 2]) == 0) caveFound = true;
+                if(world.getBlock(minX + entranceCoords[i], minY + entranceCoords[i + 1], minZ + entranceCoords[i + 2]) == Blocks.air) caveFound = true;
             }
             if(!caveFound) return 0;
         } else if(generationMethod == ISokobanLevel.EnumGenerationMethod.SURFACE) {
@@ -58,7 +59,7 @@ public class LevelGenBase{
         for(int i = minX; i <= minX + levelBounds[0]; i++) {
             for(int j = minY; j <= minY + levelBounds[1]; j++) {
                 for(int k = minZ; k <= minZ + levelBounds[2]; k++) {
-                    setBlockAndMetadata(world, i, j, k, 0, 0); // Clear the
+                    setBlockAndMetadata(world, i, j, k, Blocks.air, 0); // Clear the
                                                                // level first
                 }
             }
@@ -77,7 +78,7 @@ public class LevelGenBase{
             currentLevel = 0; // reset the counter
             for(int i = minX; i <= maxX; i++) {
                 for(int j = minZ; j <= maxZ; j++) {
-                    if(world.getBlockId(i, Y, j) != 0 && world.getBlockId(i, Y, j) != Block.tallGrass.blockID) currentLevel++; // increase
+                    if(world.getBlock(i, Y, j) != Blocks.air && world.getBlock(i, Y, j) != Blocks.tallgrass) currentLevel++; // increase
                                                                                                                                // the
                                                                                                                                // counter
                                                                                                                                // when
@@ -85,7 +86,7 @@ public class LevelGenBase{
                                                                                                                                // finds
                                                                                                                                // a
                                                                                                                                // block.
-                    if(world.getBlockId(i, Y, j) == Block.waterStill.blockID) return 0;
+                    if(world.getBlock(i, Y, j) == Blocks.water) return 0;
                 }
             }
             if(lastLevel < currentLevel - (maxX - minX) * (maxZ - minZ) * 0.9F && Y != 100) { // if the underlying Y level has 90% more
@@ -133,7 +134,7 @@ public class LevelGenBase{
                 ItemStack[] stacks = ChestGenHooks.generateStacks(rand, weightedrandomchestcontent.theItemId, weightedrandomchestcontent.theMinimumChanceToGenerateItem, weightedrandomchestcontent.theMaximumChanceToGenerateItem);
 
                 for(ItemStack item : stacks) {
-                    if(item.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID) item.setItemDamage(LevelRegistrator.getRandomNonTutorialLevel(rand));
+                    if(item == new ItemStack(SokobanMod.ItemLevelGeneratorTutorial)) item.setItemDamage(LevelRegistrator.getRandomNonTutorialLevel(rand));
                     lootGen.addLoot(item);
                 }
             }

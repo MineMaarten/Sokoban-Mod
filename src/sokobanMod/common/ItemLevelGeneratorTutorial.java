@@ -2,7 +2,7 @@ package sokobanMod.common;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -21,19 +21,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemLevelGeneratorTutorial extends Item{
 
-    public ItemLevelGeneratorTutorial(int par1){
-        super(par1);
+    public ItemLevelGeneratorTutorial(){
+        super();
         setHasSubtypes(true);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister){
+    public void registerIcons(IIconRegister par1IconRegister){
         itemIcon = par1IconRegister.registerIcon("sokobanMod:ItemLevelGenerator");
     }
 
     @Override
-    public String getItemDisplayName(ItemStack is){
+    public String getItemStackDisplayName(ItemStack is){
         if(is.getItemDamage() < 1000) return "Tutorial Level #" + (is.getItemDamage() + 1) + " Generator";
         if(is.getItemDamage() < 2000) return "Easy Level #" + (is.getItemDamage() - 999) + " Generator";
         if(is.getItemDamage() < 3000) return "Medium Level #" + (is.getItemDamage() - 1999) + " Generator";
@@ -47,7 +47,7 @@ public class ItemLevelGeneratorTutorial extends Item{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(int par1, CreativeTabs tab, List subItems){
+    public void getSubItems(Item par1, CreativeTabs tab, List subItems){
         for(ISokobanLevel level : LevelRegistrator.sokobanLevels) {
             subItems.add(new ItemStack(this, 1, level.getLevelNumber()));
         }

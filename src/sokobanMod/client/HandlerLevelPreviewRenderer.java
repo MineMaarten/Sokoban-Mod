@@ -1,15 +1,16 @@
 package sokobanMod.client;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import sokobanMod.common.LevelRegistrator;
 import sokobanMod.common.SokobanMod;
 import sokobanMod.common.SokobanUtils;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,9 +29,9 @@ public class HandlerLevelPreviewRenderer{
     private static float time = 0;
     private static boolean colliding = false;
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawBlockHighlightEvent event){
-        if(event.currentItem != null && (event.currentItem.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID || event.currentItem.itemID == SokobanMod.ItemLevelConverter.itemID)) {
+        if(event.currentItem != null && (event.currentItem == new ItemStack(SokobanMod.ItemLevelGeneratorTutorial) || event.currentItem == new ItemStack(SokobanMod.ItemLevelConverter))) {
             renderPreview(event);
         }
     }
@@ -59,7 +60,7 @@ public class HandlerLevelPreviewRenderer{
         int[] levelBounds;
         int[] rawLevelBounds;
         ForgeDirection sideHit = ForgeDirection.UP;
-        if(event.currentItem.itemID == SokobanMod.ItemLevelGeneratorTutorial.itemID) {
+        if(event.currentItem == new ItemStack(SokobanMod.ItemLevelGeneratorTutorial)) {
             rawLevelBounds = LevelRegistrator.getLevelBounds(event.currentItem.getItemDamage());
             levelBounds = rawLevelBounds.clone();
             levelBounds[0]++;

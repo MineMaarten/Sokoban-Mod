@@ -4,10 +4,11 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,31 +21,31 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockUnbreakableGlasses extends Block{
     @SideOnly(Side.CLIENT)
-    private Icon[] texture;
+    private IIcon[] texture;
 
-    public BlockUnbreakableGlasses(int par1, Material par3Material){
-        super(par1, par3Material);
+    public BlockUnbreakableGlasses(Material par3Material){
+        super(par3Material);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister){
-        texture = new Icon[1];
+    public void registerBlockIcons(IIconRegister par1IconRegister){
+        texture = new IIcon[1];
         for(int i = 0; i < 1; i++)
             texture[i] = par1IconRegister.registerIcon("sokobanMod:BlockConcreteGlass" + i);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List){
+    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List){
         for(int var4 = 0; var4 < 1; ++var4) {
-            par3List.add(new ItemStack(blockID, 1, var4));
+            par3List.add(new ItemStack(SokobanMod.BlockUnbreakableGlasses, 1, var4));
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta){
+    public IIcon getIcon(int side, int meta){
         return texture[meta];
     }
 

@@ -1,5 +1,6 @@
 package sokobanMod.common;
 
+/*
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
+*/
 
 /**
  * Sokoban Mod
@@ -23,6 +25,11 @@ import cpw.mods.fml.common.network.Player;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
+/**
+ * @deprecated
+ */
+
+/*
 public class PacketHandlerSokoban implements IPacketHandler{
 
     private static final int spawnParticleID = 1;
@@ -92,3 +99,4 @@ public class PacketHandlerSokoban implements IPacketHandler{
         return pkt;
     }
 }
+*/
