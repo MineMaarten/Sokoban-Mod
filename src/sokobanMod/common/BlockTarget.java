@@ -5,10 +5,11 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -23,25 +24,25 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTarget extends Block{
     @SideOnly(Side.CLIENT)
-    private Icon[] texture;
+    private IIcon[] texture;
 
-    public BlockTarget(int par1, Material par3Material){
-        super(par1, par3Material);
+    public BlockTarget(Material par3Material){
+        super(par3Material);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister){
-        texture = new Icon[2];
+    public void registerBlockIcons(IIconRegister par1IconRegister){
+        texture = new IIcon[2];
         texture[0] = par1IconRegister.registerIcon("sokobanMod:BlockTarget0");
         texture[1] = par1IconRegister.registerIcon("sokobanMod:BlockTarget1");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List){
-        par3List.add(new ItemStack(blockID, 1, 0));
-        par3List.add(new ItemStack(blockID, 1, 2));
+    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List){
+        par3List.add(new ItemStack(SokobanMod.BlockTarget, 1, 0));
+        par3List.add(new ItemStack(SokobanMod.BlockTarget, 1, 2));
     }
 
     public int getMetadata(int meta){
@@ -50,12 +51,12 @@ public class BlockTarget extends Block{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta){
+    public IIcon getIcon(int side, int meta){
         return texture[meta % 2]; // protection against out of bounds exception
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID){
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
         boolean shouldPowerRedstone = true;
         if(world.getBlockMetadata(x, y, z) < 2) {
             ArrayList<int[]> connectedTargets = new ArrayList<int[]>();
@@ -86,32 +87,32 @@ public class BlockTarget extends Block{
     }
 
     public boolean isConnectedToBox(World world, int x, int y, int z){
-        if(world.getBlockId(x + 1, y, z) == SokobanMod.BlockTargetBox.blockID) return true;
-        if(world.getBlockId(x - 1, y, z) == SokobanMod.BlockTargetBox.blockID) return true;
-        if(world.getBlockId(x, y + 1, z) == SokobanMod.BlockTargetBox.blockID) return true;
-        if(world.getBlockId(x, y - 1, z) == SokobanMod.BlockTargetBox.blockID) return true;
-        if(world.getBlockId(x, y, z + 1) == SokobanMod.BlockTargetBox.blockID) return true;
-        if(world.getBlockId(x, y, z - 1) == SokobanMod.BlockTargetBox.blockID) return true;
+        if(world.getBlock(x + 1, y, z) == SokobanMod.BlockTargetBox) return true;
+        if(world.getBlock(x - 1, y, z) == SokobanMod.BlockTargetBox) return true;
+        if(world.getBlock(x, y + 1, z) == SokobanMod.BlockTargetBox) return true;
+        if(world.getBlock(x, y - 1, z) == SokobanMod.BlockTargetBox) return true;
+        if(world.getBlock(x, y, z + 1) == SokobanMod.BlockTargetBox) return true;
+        if(world.getBlock(x, y, z - 1) == SokobanMod.BlockTargetBox) return true;
         return false;
     }
 
     public ArrayList<int[]> getAccessoryTiles(ArrayList<int[]> list, World world, int x, int y, int z){
         for(int i = x - 1; i <= x + 1; i++) {
-            if(world.getBlockId(i, y, z) == blockID && world.getBlockMetadata(i, y, z) < 2 && !listContainsCoord(list, i, y, z)) {
+            if(world.getBlock(i, y, z) == blockIcon && world.getBlockMetadata(i, y, z) < 2 && !listContainsCoord(list, i, y, z)) {
                 int[] coord = {i, y, z};
                 list.add(coord);
                 list = getAccessoryTiles(list, world, i, y, z);
             }
         }
         for(int i = z - 1; i <= z + 1; i++) {
-            if(world.getBlockId(x, y, i) == blockID && world.getBlockMetadata(x, y, i) < 2 && !listContainsCoord(list, x, y, i)) {
+            if(world.getBlock(x, y, i) == blockIcon && world.getBlockMetadata(x, y, i) < 2 && !listContainsCoord(list, x, y, i)) {
                 int[] coord = {x, y, i};
                 list.add(coord);
                 list = getAccessoryTiles(list, world, x, y, i);
             }
         }
         for(int i = y - 1; i <= y + 1; i++) {
-            if(world.getBlockId(x, i, z) == blockID && world.getBlockMetadata(x, i, z) < 2 && !listContainsCoord(list, x, i, z)) {
+            if(world.getBlock(x, i, z) == blockIcon && world.getBlockMetadata(x, i, z) < 2 && !listContainsCoord(list, x, i, z)) {
                 int[] coord = {x, i, z};
                 list.add(coord);
                 list = getAccessoryTiles(list, world, x, i, z);
@@ -162,12 +163,12 @@ public class BlockTarget extends Block{
     }
 
     private void updateNeighbours(World par1World, int par2, int par3, int par4){
-        par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
-        par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
-        par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
-        par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
-        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
-        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this);
+        par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this);
+        par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this);
     }
 
     @Override

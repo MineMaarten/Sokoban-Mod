@@ -14,7 +14,7 @@ public class RenderAchievementOrb extends RenderXPOrb{
      * Renders the XP Orb.
      */
     @Override
-    public void renderTheXPOrb(EntityXPOrb par1EntityXPOrb, double par2, double par4, double par6, float par8, float par9){
+    public void doRender(EntityXPOrb par1EntityXPOrb, double par2, double par4, double par6, float par8, float par9){
         GL11.glPushMatrix();
         GL11.glTranslatef((float)par2, (float)par4, (float)par6);
         bindEntityTexture(par1EntityXPOrb);

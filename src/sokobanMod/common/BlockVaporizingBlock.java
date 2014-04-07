@@ -4,11 +4,10 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import sokobanMod.common.network.PacketPlaySound;
+import sokobanMod.common.network.PacketSpawnParticle;
 
 /**
  * Sokoban Mod
@@ -19,19 +18,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockVaporizingBlock extends Block{
 
-    public BlockVaporizingBlock(int par1, Material par3Material){
-        super(par1, par3Material);
+    public BlockVaporizingBlock(Material par3Material){
+        super(par3Material);
+        setBlockTextureName(Constants.MOD_ID + ":" + "BlockRedstoneRemover");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister par1IconRegister){
-        blockIcon = par1IconRegister.registerIcon("sokobanMod:BlockRedstoneRemover");
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID){
-        if(blockID != 0 && world.isBlockIndirectlyGettingPowered(x, y, z) && world.getIndirectPowerLevelTo(x, y - 1, z, 0) > 0) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
+        if(block != Blocks.air && world.isBlockIndirectlyGettingPowered(x, y, z) && world.getIndirectPowerLevelTo(x, y - 1, z, 0) > 0) {
             vaporateNeigbours(world, x, y, z);
         }
     }
@@ -46,8 +40,14 @@ public class BlockVaporizingBlock extends Block{
         int neighbourY = y;
         int neighbourZ = z;
 
-        world.setBlock(x, y, z, 0);
-        world.playSoundEffect(x, y, z, "sokobanmod:vaporize", 0.2F, 1.0F);
+        world.setBlock(x, y, z, Blocks.air);
+        // TODO (I am getting an error here telling me that "world" is not a valid TargetPoint)
+        // SokobanMod.packetPipeline.sendToAllAround(new PacketPlaySound("sokobanmod:vaporize", x, y, z, 0.2F, 1.0F, true), world);
+        
+        /**
+         * @deprecated
+         */
+        // world.playSoundEffect(x, y, z, "sokobanmod:vaporize", 0.2F, 1.0F);
 
         spawnParticle("explode", x + 0.5D, y + 0.5D, z + 0.5D, 0.0D, 0.0D, 0.0D);
         for(int neighbour = 0; neighbour <= 5; neighbour++) {
@@ -72,12 +72,13 @@ public class BlockVaporizingBlock extends Block{
                 case 5:
                     neighbourZ = z + 1;
             }
-            world.scheduleBlockUpdate(neighbourX, neighbourY, neighbourZ, blockID, 2);
+            // TODO (this might be incorrect)
+            world.scheduleBlockUpdate(neighbourX, neighbourY, neighbourZ, world.getBlock(x, y, z), 2);
         }
     }
 
     private void spawnParticle(String string, double g, double h, double i, double d, double e, double f){
-        PacketDispatcher.sendPacketToAllPlayers(PacketHandlerSokoban.spawnParticle(string, g, h, i, d, e, f));
+    	SokobanMod.packetPipeline.sendToAll(new PacketSpawnParticle(string, g, h, i, d, e, f));
     }
 
 }

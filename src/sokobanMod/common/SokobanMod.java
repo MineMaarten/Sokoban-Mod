@@ -27,7 +27,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  */
 
 // TODO increase version
-@Mod(modid = "Minemaarten_Sokoban Mod", name = "Sokoban Mod", version = "1.0.8")
+@Mod(modid = Constants.MOD_ID, name = "Sokoban Mod", version = "1.0.8")
 public class SokobanMod{
 
     @SidedProxy(clientSide = "sokobanMod.client.ClientProxySokoban", serverSide = "sokobanMod.common.CommonProxySokoban")
@@ -112,15 +112,15 @@ public class SokobanMod{
 
         CreativeTabSokobanMod tabSokobanMod = new CreativeTabSokobanMod("tabSokobanMod");
         CreativeTabSokobanModLevels tabSokobanModLevels = new CreativeTabSokobanModLevels("tabSokobanModLevels");
-        BlockUnbreakableSolids = new BlockUnbreakableSolids(BlockUnbreakableSolidsID, Material.glass).setBlockName("Unbreakable Solid Blocks").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
-        BlockUnbreakableGlasses = new BlockUnbreakableGlasses(BlockUnbreakableGlassesID, Material.glass).setBlockName("Unbreakable Glass Blocks").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
-        BlockUnbreakableLamps = new BlockUnbreakableLamps(BlockUnbreakableLampsID, Material.glass).setBlockName("Unbreakable Lamp Blocks").setBlockUnbreakable().setResistance(6000000.0F).setLightLevel(0.9375F).setCreativeTab(tabSokobanMod);
+        BlockUnbreakableSolids = new BlockUnbreakableSolids(Material.glass).setBlockName("Unbreakable Solid Blocks").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
+        BlockUnbreakableGlasses = new BlockUnbreakableGlasses(Material.glass).setBlockName("Unbreakable Glass Blocks").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
+        BlockUnbreakableLamps = new BlockUnbreakableLamps(Material.glass).setBlockName("Unbreakable Lamp Blocks").setBlockUnbreakable().setResistance(6000000.0F).setLightLevel(0.9375F).setCreativeTab(tabSokobanMod);
 
         BlockTargetBox = new BlockTargetBox(Material.glass).setBlockName("Target Box").setHardness(1.0F).setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
-        BlockTarget = new BlockTarget(BlockTargetID, Material.glass).setBlockName("Target").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);// .setRequiresSelfNotify()
-        BlockLootGenerator = new BlockLootGenerator(BlockLootGeneratorID, Material.glass).setBlockName("Loot Generator").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
-        BlockRedstoneRemover = new BlockRedstoneRemover(BlockRedstoneRemoverID, Material.glass).setBlockName("Redstone Remover").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
-        BlockVaporizingBlock = new BlockVaporizingBlock(BlockVaporizingBlockID, Material.glass).setBlockName("Vaporizing Block").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
+        BlockTarget = new BlockTarget(Material.glass).setBlockName("Target").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);// .setRequiresSelfNotify()
+        BlockLootGenerator = new BlockLootGenerator(Material.glass).setBlockName("Loot Generator").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
+        BlockRedstoneRemover = new BlockRedstoneRemover(Material.glass).setBlockName("Redstone Remover").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
+        BlockVaporizingBlock = new BlockVaporizingBlock(Material.glass).setBlockName("Vaporizing Block").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
 
         
         // I tired right now and just trying to get this class finished... but I am confused at this section -EliteCreature

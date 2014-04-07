@@ -1,5 +1,6 @@
 package sokobanMod.common;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
@@ -12,13 +13,13 @@ import net.minecraft.item.ItemStack;
 
 public class ItemBlockUnbreakableSolids extends ItemBlock{
 
-    public ItemBlockUnbreakableSolids(int par1){
-        super(par1);
+    public ItemBlockUnbreakableSolids(Block block){
+        super(block);
         setHasSubtypes(true);
     }
 
     @Override
-    public String getItemDisplayName(ItemStack is){
+    public String getItemStackDisplayName(ItemStack is){
         String name = "";
         switch(is.getItemDamage()){
             case 0:

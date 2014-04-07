@@ -1,8 +1,7 @@
 package sokobanMod.common;
 
 import net.minecraft.creativetab.CreativeTabs;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.Item;
 
 /**
  * Sokoban Mod
@@ -17,13 +16,9 @@ public class CreativeTabSokobanMod extends CreativeTabs{
         super(par2Str);
     }
 
-    /**
-     * the itemID for the item to be displayed on the tab
-     */
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getTabIconItemIndex(){
-        return SokobanMod.BlockTargetBox.blockID;
-    }
-
+	@Override
+	public Item getTabIconItem()
+	{
+		return Item.getItemFromBlock(SokobanMod.BlockTargetBox);
+	}
 }

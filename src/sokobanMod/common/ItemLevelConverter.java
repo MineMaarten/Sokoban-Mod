@@ -8,8 +8,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -57,7 +58,7 @@ public class ItemLevelConverter extends Item{
             compound.setInteger("x", x);
             compound.setInteger("y", y);
             compound.setInteger("z", z);
-            if(world.isRemote) player.addChatMessage("\u00a7A[Level Converter] Set start coordinates to " + x + "," + y + "," + z);
+            if(world.isRemote) player.addChatMessage(new ChatComponentText("\u00a7A[Level Converter] Set start coordinates to " + x + "," + y + "," + z));
         } else {
             int startX = compound.getInteger("x");
             int startY = compound.getInteger("y");
@@ -174,11 +175,11 @@ public class ItemLevelConverter extends Item{
                                 for(int i = startX; i <= x; i++) {
                                     for(int j = startY; j <= y; j++) {
                                         for(int k = startZ; k <= z; k++) {
-                                            int blockID = world.getBlockId(i, j, k);
-                                            String blockIDString = SokobanUtils.getBlockIDString(blockID);
-                                            if(SokobanUtils.isBlockInstable(blockID) || blockID == 0) continue;
+                                            Block block = world.getBlock(i, j, k);
+                                            String blockIDString = SokobanUtils.getBlockString(block);
+                                            if(SokobanUtils.isBlockInstable(block) || block == Blocks.air) continue;
                                             int metadata = world.getBlockMetadata(i, j, k);
-                                            String blockName = Block.blocksList[blockID].getUnlocalizedName();
+                                            String blockName = block.getUnlocalizedName();
                                             int offsetX = i - startX;
                                             int offsetY = j - startY;
                                             int offsetZ = k - startZ;
@@ -194,11 +195,11 @@ public class ItemLevelConverter extends Item{
                                 for(int i = startX; i <= x; i++) {
                                     for(int j = startY; j <= y; j++) {
                                         for(int k = startZ; k <= z; k++) {
-                                            int blockID = world.getBlockId(i, j, k);
-                                            String blockIDString = SokobanUtils.getBlockIDString(blockID);
-                                            if(!SokobanUtils.isBlockInstable(blockID)) continue;
+                                            Block block = world.getBlock(i, j, k);
+                                            String blockIDString = SokobanUtils.getBlockString(block);
+                                            if(!SokobanUtils.isBlockInstable(block)) continue;
                                             int metadata = world.getBlockMetadata(i, j, k);
-                                            String blockName = Block.blocksList[blockID].getUnlocalizedName();
+                                            String blockName = block.getUnlocalizedName();
                                             int offsetX = i - startX;
                                             int offsetY = j - startY;
                                             int offsetZ = k - startZ;
@@ -211,21 +212,21 @@ public class ItemLevelConverter extends Item{
                                 generationCodeWriter.write("return true;" + NEW_LINE);
                                 generationCodeWriter.write("}" + NEW_LINE + "}"); // close the method and class body.
                                 generationCodeWriter.close();
-                                player.addChatMessage("\u00a72[Level Converter] Succesfully saved the generation code in '" + generationCodeFile.getName() + "'");
+                                player.addChatMessage(new ChatComponentText("\u00a72[Level Converter] Succesfully saved the generation code in '" + generationCodeFile.getName() + "'"));
                             } else {
-                                player.addChatMessage(EnumChatFormatting.RED + "[Level Converter] " + generationCodeFile.getName() + " already exists!");
+                                player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "[Level Converter] " + generationCodeFile.getName() + " already exists!"));
                             }
                         } else {
-                            player.addChatMessage("\u00a7C[Level Converter] The level converter wasn't able to find a Sign located in the level which displays the level info formatted like:");
-                            player.addChatMessage(EnumChatFormatting.BLUE + "[Level Converter] " + (char)34 + "Easy Level" + (char)34);
-                            player.addChatMessage(EnumChatFormatting.BLUE + "[Level Converter] " + (char)34 + "    #1    " + (char)34);
+                            player.addChatMessage(new ChatComponentText("\u00a7C[Level Converter] The level converter wasn't able to find a Sign located in the level which displays the level info formatted like:"));
+                            player.addChatMessage(new ChatComponentText(EnumChatFormatting.BLUE + "[Level Converter] " + (char)34 + "Easy Level" + (char)34));
+                            player.addChatMessage(new ChatComponentText(EnumChatFormatting.BLUE + "[Level Converter] " + (char)34 + "    #1    " + (char)34));
                         }
                     } catch(Exception e) {
-                        player.addChatMessage("\u00a7C[Level Converter] Exception: " + e.getMessage() + ", report this back to MineMaarten please!");
+                        player.addChatMessage(new ChatComponentText("\u00a7C[Level Converter] Exception: " + e.getMessage() + ", report this back to MineMaarten please!"));
                     }
                 }
             } else {
-                player.addChatMessage("\u00a7CPlease set a start coordinate first!");
+                player.addChatMessage(new ChatComponentText("\u00a7CPlease set a start coordinate first!"));
             }
 
             compound.removeTag("x");
@@ -239,8 +240,8 @@ public class ItemLevelConverter extends Item{
         for(int i = startX; i <= endX; i++) {
             for(int j = startY; j <= endY; j++) {
                 for(int k = startZ; k <= endZ; k++) {
-                    if(world.getBlockId(i, j, k) == Block.signPost.blockID || world.getBlockId(i, j, k) == Block.signWall.blockID) {
-                        TileEntity te = world.getBlockTileEntity(i, j, k);
+                    if(world.getBlock(i, j, k) == Blocks.standing_sign || world.getBlock(i, j, k) == Blocks.wall_sign) {
+                        TileEntity te = world.getTileEntity(i, j, k);
                         if(te instanceof TileEntitySign) {
                             String firstLine = ((TileEntitySign)te).signText[0].toLowerCase();
                             String secondLine = ((TileEntitySign)te).signText[1];
@@ -268,8 +269,8 @@ public class ItemLevelConverter extends Item{
             for(int i = startX; i <= endX; i++) {
                 for(int j = startY; j <= endY; j++) {
                     for(int k = startZ; k <= endZ; k++) {
-                        if(world.getBlockId(i, j, k) == Block.chest.blockID && world.getBlockTileEntity(i, j, k) != null && world.getBlockTileEntity(i, j, k) instanceof TileEntityChest) {
-                            TileEntityChest chest = (TileEntityChest)world.getBlockTileEntity(i, j, k);
+                        if(world.getBlock(i, j, k) == Blocks.chest && world.getTileEntity(i, j, k) != null && world.getTileEntity(i, j, k) instanceof TileEntityChest) {
+                            TileEntityChest chest = (TileEntityChest)world.getTileEntity(i, j, k);
 
                             writer.write("public static final ItemStack[] staticInventoryContents_" + (i - startX) + "_" + (j - startY) + "_" + (k - startZ) + " = new ItemStack[] { ");
 
@@ -283,7 +284,8 @@ public class ItemLevelConverter extends Item{
                                         for(int tab = 0; tab < 8; tab++)
                                             writer.write("\t");
                                     }
-                                    writer.write("(new ItemStack(" + SokobanUtils.getBlockIDString(stack.itemID) + ", " + stack.stackSize + ", " + stack.getItemDamage() + "))");
+                                    //TODO
+                                    // writer.write("(new ItemStack(" + SokobanUtils.getBlockString(stack.itemID) + ", " + stack.stackSize + ", " + stack.getItemDamage() + "))");
 
                                     // blockName =
                                     // Block.blocksList[stack.itemID].getUnlocalizedName();
@@ -308,8 +310,8 @@ public class ItemLevelConverter extends Item{
             for(int i = startX; i <= endX; i++) {
                 for(int j = startY; j <= endY; j++) {
                     for(int k = startZ; k <= endZ; k++) {
-                        if(world.getBlockId(i, j, k) == SokobanMod.BlockLootGenerator.blockID && world.getBlockTileEntity(i, j, k) != null && world.getBlockTileEntity(i, j, k) instanceof TileEntityLootGenerator) {
-                            TileEntityLootGenerator lootGen = (TileEntityLootGenerator)world.getBlockTileEntity(i, j, k);
+                        if(world.getBlock(i, j, k) == SokobanMod.BlockLootGenerator && world.getTileEntity(i, j, k) != null && world.getTileEntity(i, j, k) instanceof TileEntityLootGenerator) {
+                            TileEntityLootGenerator lootGen = (TileEntityLootGenerator)world.getTileEntity(i, j, k);
 
                             writer.write("public static final ItemStack[] staticInventoryContents_" + (i - startX) + "_" + (j - startY) + "_" + (k - startZ) + " = new ItemStack[] { ");
 
@@ -322,7 +324,8 @@ public class ItemLevelConverter extends Item{
                                     for(int tab = 0; tab < 8; tab++)
                                         writer.write("\t");
                                 }
-                                writer.write("(new ItemStack(" + SokobanUtils.getBlockIDString(stack.itemID) + ", " + stack.stackSize + ", " + stack.getItemDamage() + "))");
+                                //TODO
+                                // writer.write("(new ItemStack(" + SokobanUtils.getBlockIDString(stack.itemID) + ", " + stack.stackSize + ", " + stack.getItemDamage() + "))");
 
                                 // blockName =
                                 // Block.blocksList[stack.itemID].getUnlocalizedName();
@@ -345,12 +348,12 @@ public class ItemLevelConverter extends Item{
         List<Integer> entranceCoords = new ArrayList<Integer>();
         for(int i = startX; i <= endX; i++) {
             for(int j = startZ; j <= endZ; j++) {
-                if(world.getBlockId(i, startY, j) == 0) {
+                if(world.getBlock(i, startY, j) == Blocks.air) {
                     entranceCoords.add(i - startX);
                     entranceCoords.add(0);
                     entranceCoords.add(j - startZ);
                 }
-                if(world.getBlockId(i, endY, j) == 0) {
+                if(world.getBlock(i, endY, j) == Blocks.air) {
                     entranceCoords.add(i - startX);
                     entranceCoords.add(endY - startY);
                     entranceCoords.add(j - startZ);
@@ -359,12 +362,12 @@ public class ItemLevelConverter extends Item{
         }
         for(int i = startX; i <= endX; i++) {
             for(int j = startY + 1; j < endY; j++) {
-                if(world.getBlockId(i, j, startZ) == 0) {
+                if(world.getBlock(i, j, startZ) == Blocks.air) {
                     entranceCoords.add(i - startX);
                     entranceCoords.add(j - startY);
                     entranceCoords.add(0);
                 }
-                if(world.getBlockId(i, j, endZ) == 0) {
+                if(world.getBlock(i, j, endZ) == Blocks.air) {
                     entranceCoords.add(i - startX);
                     entranceCoords.add(j - startY);
                     entranceCoords.add(endZ - startZ);
@@ -374,12 +377,12 @@ public class ItemLevelConverter extends Item{
 
         for(int i = startY + 1; i < endY; i++) {
             for(int j = startZ + 1; j < endZ; j++) {
-                if(world.getBlockId(startX, i, j) == 0) {
+                if(world.getBlock(startX, i, j) == Blocks.air) {
                     entranceCoords.add(0);
                     entranceCoords.add(i - startY);
                     entranceCoords.add(j - startZ);
                 }
-                if(world.getBlockId(endX, i, j) == 0) {
+                if(world.getBlock(endX, i, j) == Blocks.air) {
                     entranceCoords.add(endX - startX);
                     entranceCoords.add(i - startY);
                     entranceCoords.add(j - startZ);
@@ -390,8 +393,8 @@ public class ItemLevelConverter extends Item{
     }
 
     private void handleSigns(World world, int x, int y, int z, int offsetX, int offsetY, int offsetZ, FileWriter generationCodeWriter){
-        if(world.getBlockId(x, y, z) == Block.signPost.blockID || world.getBlockId(x, y, z) == Block.signWall.blockID) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+        if(world.getBlock(x, y, z) == Blocks.standing_sign || world.getBlock(x, y, z) == Blocks.wall_sign) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te instanceof TileEntitySign) {
                 try {
                     generationCodeWriter.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntitySign){" + NEW_LINE);
@@ -411,8 +414,8 @@ public class ItemLevelConverter extends Item{
     }
 
     private void handleTargetBoxes(World world, int x, int y, int z, int offsetX, int offsetY, int offsetZ, int maxX, int maxY, int maxZ, FileWriter generationCodeWriter){
-        if(world.getBlockId(x, y, z) == SokobanMod.BlockTargetBox.blockID) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+        if(world.getBlock(x, y, z) == SokobanMod.BlockTargetBox) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te instanceof TileEntityTargetBox) {
                 try {
                     generationCodeWriter.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntityTargetBox){" + NEW_LINE);
@@ -429,8 +432,8 @@ public class ItemLevelConverter extends Item{
     }
 
     private void handleChests(World world, int x, int y, int z, int offsetX, int offsetY, int offsetZ, FileWriter writer){
-        if(world.getBlockId(x, y, z) == Block.chest.blockID) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+        if(world.getBlock(x, y, z) == Blocks.chest) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te instanceof TileEntityChest) {
                 try {
                     writer.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntityChest){" + NEW_LINE);
@@ -445,8 +448,8 @@ public class ItemLevelConverter extends Item{
     }
 
     private void handleLootGenerators(World world, int x, int y, int z, int offsetX, int offsetY, int offsetZ, FileWriter writer){
-        if(world.getBlockId(x, y, z) == SokobanMod.BlockLootGenerator.blockID) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+        if(world.getBlock(x, y, z) == SokobanMod.BlockLootGenerator) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te instanceof TileEntityLootGenerator) {
                 try {
                     writer.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntityLootGenerator){" + NEW_LINE);
@@ -462,8 +465,8 @@ public class ItemLevelConverter extends Item{
     }
 
     private void handleCommandBlocks(World world, int x, int y, int z, int offsetX, int offsetY, int offsetZ, FileWriter writer){
-        if(world.getBlockId(x, y, z) == Block.commandBlock.blockID) {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+        if(world.getBlock(x, y, z) == Blocks.command_block) {
+            TileEntity te = world.getTileEntity(x, y, z);
             if(te instanceof TileEntityCommandBlock) {
                 try {
                     writer.write("if(world.getBlockTileEntity(baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ") instanceof TileEntityCommandBlock){" + NEW_LINE);
