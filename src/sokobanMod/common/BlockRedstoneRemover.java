@@ -4,14 +4,15 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import sokobanMod.common.network.PacketSpawnParticle;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,23 +25,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockRedstoneRemover extends Block{
     @SideOnly(Side.CLIENT)
-    private Icon[] texture;
+    private IIcon[] texture;
 
-    public BlockRedstoneRemover(int par1, Material par3Material){
-        super(par1, par3Material);
+    public BlockRedstoneRemover(Material par3Material){
+        super(par3Material);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void registerIcons(IconRegister par1IconRegister){
-        texture = new Icon[2];
+    public void registerBlockIcons(IIconRegister par1IconRegister){
+        texture = new IIcon[2];
         texture[0] = par1IconRegister.registerIcon("sokobanMod:BlockRedstoneRemover");
         texture[1] = par1IconRegister.registerIcon("sokobanMod:BlockConcrete");
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIcon(int side, int meta){
+    public IIcon getIcon(int side, int meta){
         if(meta == side && side >= 2 && meta >= 2) return texture[0];
         if(meta != side && side < 2 && meta < 2) return texture[0];
         return texture[1]; // on the other 5 sides display the concrete texture.
@@ -67,8 +68,8 @@ public class BlockRedstoneRemover extends Block{
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID){
-        if(blockID != 0 && world.isBlockIndirectlyGettingPowered(x, y, z)) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block){
+        if(block != Blocks.air && world.isBlockIndirectlyGettingPowered(x, y, z)) {
             int meta = world.getBlockMetadata(x, y, z);
             switch(meta){
                 case 0:
@@ -91,8 +92,8 @@ public class BlockRedstoneRemover extends Block{
                     break;
             }
 
-            if(world.getBlockId(x, y, z) == SokobanMod.BlockTargetBox.blockID) return;
-            world.setBlock(x, y, z, 0);
+            if(world.getBlock(x, y, z) == SokobanMod.BlockTargetBox) return;
+            world.setBlock(x, y, z, Blocks.air);
             world.playSoundEffect(x, y, z, "sokobanmod:air", 0.2F, 1.0F);
             Random rand = new Random();
             double spreading = 0.5D;
@@ -103,7 +104,7 @@ public class BlockRedstoneRemover extends Block{
     }
 
     private void spawnParticle(String string, double g, double h, double i, double d, double e, double f){
-        PacketDispatcher.sendPacketToAllPlayers(PacketHandlerSokoban.spawnParticle(string, g, h, i, d, e, f));
+    	SokobanMod.packetPipeline.sendToAll(new PacketSpawnParticle(string, g, h, i, d, e, f));
     }
 
 }

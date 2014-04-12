@@ -2,9 +2,9 @@ package sokobanMod.common;
 
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import sokobanMod.common.network.PacketGiveLevelAchievement;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -29,7 +29,7 @@ public class EntityAchievementOrb extends EntityXPOrb{
     public void onCollideWithPlayer(EntityPlayer player){
         if(!worldObj.isRemote) {
             // player.addStat(AchievementHandler.getAchieveFromLevel(getXpValue()), 1);
-            PacketDispatcher.sendPacketToPlayer(PacketHandlerSokoban.giveLevelAchievement(getXpValue()), (Player)player);
+        	SokobanMod.packetPipeline.sendTo(new PacketGiveLevelAchievement(getXpValue()), (EntityPlayerMP) player);
 
             playSound("random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             player.onItemPickup(this, 1);

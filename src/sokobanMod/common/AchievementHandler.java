@@ -37,11 +37,14 @@ public class AchievementHandler{
             } else {
                 achieveX += MAX_ACHIEVES_PER_ROW - 1 - levelCount % MAX_ACHIEVES_PER_ROW;
             }
-            Achievement achieve = new Achievement(level.getLevelNumber() + ACHIEVEMENT_ID_OFFSET, "level" + level.getLevelNumber(), achieveX, achieveY, SokobanMod.ItemLevelGeneratorTutorial, parentAchieve).setIndependent().registerAchievement();
+            
+            //TODO (Achievement IDs are now strings) - EC
+            
+            Achievement achieve = new Achievement(level.getLevelNumber() + "" + ACHIEVEMENT_ID_OFFSET, "level" + level.getLevelNumber(), achieveX, achieveY, SokobanMod.ItemLevelGeneratorTutorial, parentAchieve).initIndependentStat().registerStat();
             achieveList.add(achieve);
             if(level.getLevelNumber() < 1000) lastTutorialAchieve = achieve;
             addAchievementName("level" + level.getLevelNumber(), level.getLevelName());
-            addAchievementDesc("level" + level.getLevelNumber(), "Complete " + SokobanMod.ItemLevelGeneratorTutorial.getItemDisplayName(new ItemStack(SokobanMod.ItemLevelGeneratorTutorial, 1, level.getLevelNumber())).replace(" Generator", "") + ".");
+            addAchievementDesc("level" + level.getLevelNumber(), "Complete " + SokobanMod.ItemLevelGeneratorTutorial.getItemStackDisplayName(new ItemStack(SokobanMod.ItemLevelGeneratorTutorial, 1, level.getLevelNumber())).replace(" Generator", "") + ".");
         }
 
         AchievementPage.registerAchievementPage(new AchievementPage("Sokoban", achieveList.toArray(new Achievement[achieveList.size()])));
@@ -55,9 +58,11 @@ public class AchievementHandler{
         LanguageRegistry.instance().addStringLocalization("achievement." + ach + ".desc", "en_US", desc);
     }
 
+    // (Made this a string by adding { + "" }, probably incorrect/not-what-you-want)
+    
     public static Achievement getAchieveFromLevel(int level){
         for(Achievement achieve : (List<Achievement>)AchievementList.achievementList) {
-            if(achieve.statId == level + 5242880 + ACHIEVEMENT_ID_OFFSET) {
+            if(achieve.statId == level + 5242880 + "" + ACHIEVEMENT_ID_OFFSET) {
                 return achieve;
             }
         }

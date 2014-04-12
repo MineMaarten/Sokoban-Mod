@@ -3,6 +3,7 @@ package sokobanMod.common;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -73,7 +74,8 @@ public class WorldGeneratorSokoban implements IWorldGenerator{
                 return true;
             }
         }
-        if(player != null) player.addChatMessage(EnumChatFormatting.RED + "You can't generate the level here: An other level is occupying this location!");
+        // (I saw that you added a Packet for sending chat mesages, and so am leaving a TODO here for future use.)
+        if(player != null) player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You can't generate the level here: An other level is occupying this location!"));
         return false;
     }
 }
