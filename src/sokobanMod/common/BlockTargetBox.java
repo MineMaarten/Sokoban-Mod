@@ -1,16 +1,24 @@
 package sokobanMod.common;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,12 +30,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 
 public class BlockTargetBox extends BlockFalling implements ITileEntityProvider{
+    @SideOnly(Side.CLIENT)
+    protected IIcon blockIcon;
 
-    // public static boolean fallInstantly = false;
-
-	@SideOnly(Side.CLIENT)
-	protected IIcon blockIcon;
-	
     public BlockTargetBox(Material material){
         super(material);
         setHardness(0.0F);
@@ -85,6 +90,31 @@ public class BlockTargetBox extends BlockFalling implements ITileEntityProvider{
         return super.removedByPlayer(world, player, x, y, z);
     }
 
+    private final List<EntityFallingBlock> trackedBlocks = new ArrayList<EntityFallingBlock>();//If there's a falling target when the session restarts, it won't be tracked anymore and if it gets broken (torch for example), it will not break the level.... low chance though.
+
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event){
+        Iterator<EntityFallingBlock> iterator = trackedBlocks.iterator();
+        while(iterator.hasNext()) {
+            EntityFallingBlock entity = iterator.next();
+            if(entity.isDead) {
+                NBTTagCompound tag = entity.field_145810_d;
+                if(tag != null) {
+                    int minX = tag.getInteger("minX");
+                    int minY = tag.getInteger("minY");
+                    int minZ = tag.getInteger("minZ");
+                    int maxX = tag.getInteger("maxX");
+                    int maxY = tag.getInteger("maxY");
+                    int maxZ = tag.getInteger("maxZ");
+                    int levelDropped = tag.getInteger("levelDropped");
+                    boolean lootGeneratorFound = SokobanUtils.removeLevel(entity.worldObj, minX, minY, minZ, maxX, maxY, maxZ, entity.worldObj.rand);
+                    if(lootGeneratorFound) dropBlockAsItem(entity.worldObj, (int)entity.posX, (int)entity.posY, (int)entity.posZ, new ItemStack(SokobanMod.ItemLevelGeneratorTutorial, 1, levelDropped));
+                }
+                iterator.remove();
+            }
+        }
+    }
+
     @Override
     public int quantityDropped(Random rand){
         return 0;
@@ -95,5 +125,22 @@ public class BlockTargetBox extends BlockFalling implements ITileEntityProvider{
         return new TileEntityTargetBox();
     }
 
-    // SAND CODE removed and now implements ITileEntityProvider
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)//cleanup TE when removed
+    {
+        super.breakBlock(world, x, y, z, block, meta);
+        world.removeTileEntity(x, y, z);
+    }
+
+    @Override
+    public void func_149829_a(EntityFallingBlock entity){
+        TileEntity te = entity.worldObj.getTileEntity((int)Math.floor(entity.posX), (int)Math.floor(entity.posY), (int)Math.floor(entity.posZ));
+        if(te instanceof TileEntityTargetBox) {
+            NBTTagCompound tag = new NBTTagCompound();
+            te.writeToNBT(tag);
+            entity.field_145810_d = tag;//transfer the level data from the TE (which is going to be broken) into the falling sand entity.
+            entity.field_145813_c = false;//prevent items from being dropped.
+            trackedBlocks.add(entity);
+        }
+    }
 }

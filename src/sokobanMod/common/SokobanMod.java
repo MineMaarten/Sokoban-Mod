@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import sokobanMod.common.network.PacketPipeline;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -66,16 +67,15 @@ public class SokobanMod{
 
     int ItemLevelConverterID;
     int ItemLevelGeneratorTutorialID;
-    
+
     /** Updated PacketHandler from Forge wiki tutorial: http://www.minecraftforge.net/wiki/Netty_Packet_Handling */
-	public static final PacketPipeline packetPipeline = new PacketPipeline();
-    
+    public static final PacketPipeline packetPipeline = new PacketPipeline();
+
     @EventHandler
     public void PreInit(FMLPreInitializationEvent event){
         Configuration config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
-        
-        
+
         // block ID's
         //descrepet
         // BlockUnbreakableSolidsID = config.getBlock("Unbreakable Solids ID", 600).getInt();
@@ -86,12 +86,9 @@ public class SokobanMod{
         // BlockLootGeneratorID = config.getBlock("Loot Generator ID", 603).getInt();
         // BlockRedstoneRemoverID = config.getBlock("Redstone Remover ID", 604).getInt();
         // BlockVaporizingBlockID = config.getBlock("Vaporizing Block ID", 605).getInt();
-        
-        
-        
 
         // general
-        
+
         Property PropertySurfaceChance = config.get(Configuration.CATEGORY_GENERAL, "Surface Generation Chance", 80);
         PropertySurfaceChance.comment = "The chance of sokoban levels to be generated at the surface. The number says 1 in how many chunks should I try to generate? For example, default it is 1 in 80 chunks. 0 to disable any spawn at all.";
         CONFIG_SURFACE_GENERATION_CHANCE = PropertySurfaceChance.getInt();
@@ -99,8 +96,6 @@ public class SokobanMod{
         Property PropertyUndergroundChance = config.get(Configuration.CATEGORY_GENERAL, "Underground Generation Chance", 40);
         PropertyUndergroundChance.comment = "The chance of sokoban levels to be generated under the ground. The number says 1 in how many chunks should I try to generate? For example, default it is 1 in 40 chunks. 0 to disable any spawn at all.";
         CONFIG_UNDERGROUND_GENERATION_CHANCE = PropertyUndergroundChance.getInt();
-         
-        
 
         // item ID's
         //@deprecated
@@ -122,7 +117,8 @@ public class SokobanMod{
         BlockRedstoneRemover = new BlockRedstoneRemover(Material.glass).setBlockName("Redstone Remover").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
         BlockVaporizingBlock = new BlockVaporizingBlock(Material.glass).setBlockName("Vaporizing Block").setBlockUnbreakable().setResistance(6000000.0F).setCreativeTab(tabSokobanMod);
 
-        
+        FMLCommonHandler.instance().bus().register(BlockTargetBox);
+
         // I tired right now and just trying to get this class finished... but I am confused at this section -EliteCreature
         // Item.itemsList[BlockUnbreakableSolidsID] = new ItemBlockUnbreakableSolids(BlockUnbreakableSolidsID - 256).setUnlocalizedName("Unbreakable Solid Blocks");
         // Item.itemsList[BlockUnbreakableGlassesID] = new ItemBlockUnbreakableGlasses(BlockUnbreakableGlassesID - 256).setUnlocalizedName("Unbreakable Glass Blocks");
@@ -151,13 +147,12 @@ public class SokobanMod{
         proxy.registerRenders();
         packetPipeline.initialise();
     }
-    
+
     @EventHandler
-    public void modsLoaded(FMLPostInitializationEvent event)
-    {
-    	packetPipeline.postInitialise();
+    public void modsLoaded(FMLPostInitializationEvent event){
+        packetPipeline.postInitialise();
     }
-    
+
     public void gameRegisters(){
 
         // new blocks
@@ -184,15 +179,14 @@ public class SokobanMod{
 
         // worldgenerators
         worldGenerator = new WorldGeneratorSokoban();
-        
+
         //note: you might want to change '1' to a larger number (apparently larger numbers mean
         //      lower priority, but I have no idea what the standard is currently -EliteCreature
         GameRegistry.registerWorldGenerator(worldGenerator, 1);
     }
 
-    
     //I added an en_US.lang file in resources/assets/sokobanmod/lang -EliteCreature
-    
+
     /**
      * @deprecated
      * 
@@ -231,16 +225,15 @@ public class SokobanMod{
         LanguageRegistry.instance().addStringLocalization("itemGroup.tabSokobanModLevels", "en_US", "Sokoban Levels");
      * 
      */
-    
 
-        /*
-         * this.addAchievementName("achieveT1", "The Basics");
-         * this.addAchievementName("achieveT2", "Double Trouble");
-         * this.addAchievementName("achieveT3", "Doors");
-         * this.addAchievementName("achieveT4", "The Other Side Of The Door");
-         * //this.addAchievementName("achieveT1", "The Basics"); for(int i = 1;
-         * i < levelAmount; i++){ this.addAchievementDesc("achieveT" + i,
-         * "Complete Tutorial Level #" + i + "."); }
-         */
+    /*
+     * this.addAchievementName("achieveT1", "The Basics");
+     * this.addAchievementName("achieveT2", "Double Trouble");
+     * this.addAchievementName("achieveT3", "Doors");
+     * this.addAchievementName("achieveT4", "The Other Side Of The Door");
+     * //this.addAchievementName("achieveT1", "The Basics"); for(int i = 1;
+     * i < levelAmount; i++){ this.addAchievementDesc("achieveT" + i,
+     * "Complete Tutorial Level #" + i + "."); }
+     */
 
-    }
+}
