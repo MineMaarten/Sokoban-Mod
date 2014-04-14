@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -34,7 +35,7 @@ public class SokobanMod{
     @SidedProxy(clientSide = "sokobanMod.client.ClientProxySokoban", serverSide = "sokobanMod.common.CommonProxySokoban")
     public static CommonProxySokoban proxy;
 
-    @Instance("Minemaarten_Sokoban Mod")
+    @Instance(Constants.MOD_ID)
     public static SokobanMod instance = new SokobanMod();
 
     private final static String[] SUBNAMES = {"White", "Orange", "Magenta", "LightBlue", "Yellow", "LightGreen", "Pink", "DarkGrey", "LightGrey", "Cyan", "Purple", "Blue", "Brown", "Green", "Red", "Black"};
@@ -51,7 +52,7 @@ public class SokobanMod{
     public static Item ItemLevelConverter;
     public static Item ItemLevelGeneratorTutorial;
 
-    public static WorldGeneratorSokoban worldGenerator;
+    //   public static WorldGeneratorSokoban worldGenerator;
 
     public static int CONFIG_SURFACE_GENERATION_CHANCE;
     public static int CONFIG_UNDERGROUND_GENERATION_CHANCE;
@@ -156,18 +157,18 @@ public class SokobanMod{
     public void gameRegisters(){
 
         // new blocks
-        GameRegistry.registerBlock(BlockUnbreakableSolids, ItemBlockUnbreakableSolids.class, "Unbreakable Solids");
-        GameRegistry.registerBlock(BlockUnbreakableGlasses, ItemBlockUnbreakableGlasses.class, "Unbreakable Glasses");
-        GameRegistry.registerBlock(BlockUnbreakableLamps, ItemBlockUnbreakableLamps.class, "Unbreakable Lamps");
-        GameRegistry.registerBlock(BlockTargetBox, "Target Box");
-        GameRegistry.registerBlock(BlockTarget, ItemBlockTarget.class, "Target");
-        GameRegistry.registerBlock(BlockLootGenerator, "Loot Generator");
-        GameRegistry.registerBlock(BlockRedstoneRemover, "Redstone Remover");
-        GameRegistry.registerBlock(BlockVaporizingBlock, "Vaporizing Block");
+        GameRegistry.registerBlock(BlockUnbreakableSolids, ItemBlockUnbreakableSolids.class, "unbreakableSolids", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockUnbreakableGlasses, ItemBlockUnbreakableGlasses.class, "unbreakableGlasses", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockUnbreakableLamps, ItemBlockUnbreakableLamps.class, "unbreakableLamps", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockTargetBox, ItemBlock.class, "targetBox", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockTarget, ItemBlockTarget.class, "target", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockLootGenerator, ItemBlock.class, "lootGenerator", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockRedstoneRemover, ItemBlock.class, "redstoneRemover", Constants.MOD_ID);
+        GameRegistry.registerBlock(BlockVaporizingBlock, ItemBlock.class, "vaporizingBlock", Constants.MOD_ID);
 
         // new items
-        GameRegistry.registerItem(ItemLevelConverter, "Level Converter");
-        GameRegistry.registerItem(ItemLevelGeneratorTutorial, "Level Generator Tutorial");
+        GameRegistry.registerItem(ItemLevelConverter, "levelConverter", Constants.MOD_ID);
+        GameRegistry.registerItem(ItemLevelGeneratorTutorial, "levelGeneratorTutorial", Constants.MOD_ID);
 
         // crafting recipes
         GameRegistry.addRecipe(new ItemStack(SokobanMod.ItemLevelGeneratorTutorial, 1, 0), "srs", "rgr", "srs", 's', Blocks.stonebrick, 'r', Items.redstone, 'g', Items.gold_ingot);
@@ -178,11 +179,11 @@ public class SokobanMod{
         GameRegistry.registerTileEntity(sokobanMod.common.TileEntityTargetBox.class, "tileEntityTargetBox");
 
         // worldgenerators
-        worldGenerator = new WorldGeneratorSokoban();
+        //      worldGenerator = new WorldGeneratorSokoban();
 
         //note: you might want to change '1' to a larger number (apparently larger numbers mean
         //      lower priority, but I have no idea what the standard is currently -EliteCreature
-        GameRegistry.registerWorldGenerator(worldGenerator, 1);
+        //       GameRegistry.registerWorldGenerator(worldGenerator, 1);
     }
 
     //I added an en_US.lang file in resources/assets/sokobanmod/lang -EliteCreature

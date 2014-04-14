@@ -1,0 +1,6 @@
+{
+  "air": {"category": "ambient","sounds": ["air"]},
+ "lockSound": {"category": "ambient","sounds": ["lockSound"]},
+  "movingBox": {"category": "ambient","sounds": ["movingBox"]},
+   "vaporize": {"category": "ambient","sounds": ["vaporize"]}
+}

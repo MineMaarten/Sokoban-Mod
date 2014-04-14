@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -60,7 +61,8 @@ public class BlockTarget extends Block{
         boolean shouldPowerRedstone = true;
         if(world.getBlockMetadata(x, y, z) < 2) {
             ArrayList<int[]> connectedTargets = new ArrayList<int[]>();
-            connectedTargets = getAccessoryTiles(connectedTargets, world, x, y, z);
+            connectedTargets.add(new int[]{x, y, z});
+            getAccessoryTiles(connectedTargets, world, x, y, z);
             for(int i = 0; i < connectedTargets.size(); i++) {
                 int[] coord = connectedTargets.get(i);
                 if(!isConnectedToBox(world, coord[0], coord[1], coord[2])) {
@@ -87,38 +89,20 @@ public class BlockTarget extends Block{
     }
 
     public boolean isConnectedToBox(World world, int x, int y, int z){
-        if(world.getBlock(x + 1, y, z) == SokobanMod.BlockTargetBox) return true;
-        if(world.getBlock(x - 1, y, z) == SokobanMod.BlockTargetBox) return true;
-        if(world.getBlock(x, y + 1, z) == SokobanMod.BlockTargetBox) return true;
-        if(world.getBlock(x, y - 1, z) == SokobanMod.BlockTargetBox) return true;
-        if(world.getBlock(x, y, z + 1) == SokobanMod.BlockTargetBox) return true;
-        if(world.getBlock(x, y, z - 1) == SokobanMod.BlockTargetBox) return true;
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if(world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == SokobanMod.BlockTargetBox) return true;
+        }
         return false;
     }
 
-    public ArrayList<int[]> getAccessoryTiles(ArrayList<int[]> list, World world, int x, int y, int z){
-        for(int i = x - 1; i <= x + 1; i++) {
-            if(world.getBlock(i, y, z) == blockIcon && world.getBlockMetadata(i, y, z) < 2 && !listContainsCoord(list, i, y, z)) {
-                int[] coord = {i, y, z};
+    private void getAccessoryTiles(ArrayList<int[]> list, World world, int x, int y, int z){
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            if(world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == this && world.getBlockMetadata(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) < 2 && !listContainsCoord(list, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
+                int[] coord = {x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ};
                 list.add(coord);
-                list = getAccessoryTiles(list, world, i, y, z);
+                getAccessoryTiles(list, world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
             }
         }
-        for(int i = z - 1; i <= z + 1; i++) {
-            if(world.getBlock(x, y, i) == blockIcon && world.getBlockMetadata(x, y, i) < 2 && !listContainsCoord(list, x, y, i)) {
-                int[] coord = {x, y, i};
-                list.add(coord);
-                list = getAccessoryTiles(list, world, x, y, i);
-            }
-        }
-        for(int i = y - 1; i <= y + 1; i++) {
-            if(world.getBlock(x, i, z) == blockIcon && world.getBlockMetadata(x, i, z) < 2 && !listContainsCoord(list, x, i, z)) {
-                int[] coord = {x, i, z};
-                list.add(coord);
-                list = getAccessoryTiles(list, world, x, i, z);
-            }
-        }
-        return list;
     }
 
     private boolean listContainsCoord(ArrayList<int[]> list, int x, int y, int z){

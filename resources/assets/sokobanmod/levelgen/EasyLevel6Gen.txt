@@ -1,0 +1,10 @@
+189,4,-43
+// ^ Max boundaries
+START
+
+// Stable blocks
+
+// Unstable blocks
+0,0,0,minecraft:standing_sign,4,Sign_0_0_0
+1,0,0,PneumaticCraft:airCompressor,3,TileEntityAirCompressor_1_0_0
+1,0,1,PneumaticCraft:universalSensor,0,TileEntityUniversalSensor_1_0_1

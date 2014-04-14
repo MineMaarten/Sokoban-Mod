@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,7 +18,9 @@ import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import sokobanMod.common.gen.Converter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,7 +50,6 @@ public class ItemLevelConverter extends Item{
 
     @Override
     public boolean onItemUse(ItemStack IStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10){
-
         if(IStack.stackTagCompound == null) {
             IStack.setTagCompound(new NBTTagCompound());
         }
@@ -97,121 +97,8 @@ public class ItemLevelConverter extends Item{
                             }
                             File generationCodeFile = new File("Sokoban Generation Code\\" + difficulty + "Level" + (levelNumber % 1000 + 1) + "Gen.java");
                             if(!generationCodeFile.exists()) {
-                                /*
-                                int fileCounter = 1;
-                                do {
-                                    generationCodeFile = new File("Sokoban Generation Code\\Generation Code " + fileCounter + ".txt");
-                                    fileCounter++;
-                                } while(generationCodeFile.exists());
-                                */
                                 generationCodeFile.getParentFile().mkdirs();
-                                FileWriter generationCodeWriter = new FileWriter(generationCodeFile);
-
-                                //generate the package declaration
-                                generationCodeWriter.write("package sokobanMod.common.gen." + difficulty.toLowerCase() + ";" + NEW_LINE + NEW_LINE);
-
-                                // generate the includes
-                                generationCodeWriter.write("import sokobanMod.common.SokobanMod;" + NEW_LINE);
-                                generationCodeWriter.write("import sokobanMod.common.TileEntityLootGenerator;" + NEW_LINE);
-                                generationCodeWriter.write("import sokobanMod.common.TileEntityTargetBox;" + NEW_LINE);
-                                generationCodeWriter.write("import sokobanMod.common.gen.LevelGenBase;" + NEW_LINE);
-                                generationCodeWriter.write("import sokobanMod.common.gen.ISokobanLevel;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.block.Block;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.item.ItemStack;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.tileentity.TileEntitySign;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.tileentity.TileEntityChest;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.tileentity.TileEntityCommandBlock;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.util.WeightedRandomChestContent;" + NEW_LINE);
-                                generationCodeWriter.write("import net.minecraft.world.World;" + NEW_LINE + NEW_LINE);
-
-                                // generate the classname
-                                generationCodeWriter.write("public class " + generationCodeFile.getName().replace(".java", "") + " implements ISokobanLevel{" + NEW_LINE);
-                                generationCodeWriter.write("private static final int[] levelBounds = {" + (x - startX) + ", " + (y - startY) + ", " + (z - startZ) + "};" + NEW_LINE);
-                                generationCodeWriter.write("private static final int[] entranceCoords = {");
-                                List<Integer> entranceCoords = getEntranceCoords(world, startX, startY, startZ, x, y, z);
-                                for(int i = 0; i < entranceCoords.size(); i++) {
-                                    generationCodeWriter.write(entranceCoords.get(i) + "");
-                                    if(i < entranceCoords.size() - 1) generationCodeWriter.write(", ");
-                                }
-                                generationCodeWriter.write("};" + NEW_LINE);
-
-                                // check for any chests/loot generators
-                                generateChestContents(world, startX, startY, startZ, x, y, z, generationCodeWriter);
-                                generateLootGeneratorContents(world, startX, startY, startZ, x, y, z, generationCodeWriter);
-
-                                generationCodeWriter.write("public int getLevelNumber(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn " + levelNumber + ";" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public int[] getLevelBounds(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn levelBounds;" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public int[] getEntranceCoords(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn entranceCoords;" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public String getLevelName(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn " + (char)34 + lastLevelName + (char)34 + ";" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public String getAuthorName(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn " + (char)34 + (char)34 + ";" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public boolean canGenerateOnSurface(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn true;" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("public boolean canGenerateUnderground(){" + NEW_LINE);
-                                generationCodeWriter.write("\treturn true;" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + NEW_LINE);
-
-                                // generate the functionname
-                                generationCodeWriter.write("public boolean generate(World world, ISokobanLevel.EnumGenerationMethod generationMethod, int baseX, int baseY, int baseZ){" + NEW_LINE + NEW_LINE);
-
-                                generationCodeWriter.write("//base blocks" + NEW_LINE);
-
-                                for(int i = startX; i <= x; i++) {
-                                    for(int j = startY; j <= y; j++) {
-                                        for(int k = startZ; k <= z; k++) {
-                                            Block block = world.getBlock(i, j, k);
-                                            String blockIDString = SokobanUtils.getBlockString(block);
-                                            if(SokobanUtils.isBlockInstable(block) || block == Blocks.air) continue;
-                                            int metadata = world.getBlockMetadata(i, j, k);
-                                            String blockName = block.getUnlocalizedName();
-                                            int offsetX = i - startX;
-                                            int offsetY = j - startY;
-                                            int offsetZ = k - startZ;
-                                            generationCodeWriter.write("LevelGenBase.setBlockAndMetadata(world, baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ", " + blockIDString + ", " + metadata + "); //" + blockName + NEW_LINE);
-                                            handleLootGenerators(world, i, j, k, offsetX, offsetY, offsetZ, generationCodeWriter);
-                                            handleChests(world, i, j, k, offsetX, offsetY, offsetZ, generationCodeWriter);
-                                            handleCommandBlocks(world, i, j, k, offsetX, offsetY, offsetZ, generationCodeWriter);
-                                        }
-                                    }
-                                }
-
-                                generationCodeWriter.write(NEW_LINE + "//Instable blocks (like torches, levers, signs)" + NEW_LINE);
-                                for(int i = startX; i <= x; i++) {
-                                    for(int j = startY; j <= y; j++) {
-                                        for(int k = startZ; k <= z; k++) {
-                                            Block block = world.getBlock(i, j, k);
-                                            String blockIDString = SokobanUtils.getBlockString(block);
-                                            if(!SokobanUtils.isBlockInstable(block)) continue;
-                                            int metadata = world.getBlockMetadata(i, j, k);
-                                            String blockName = block.getUnlocalizedName();
-                                            int offsetX = i - startX;
-                                            int offsetY = j - startY;
-                                            int offsetZ = k - startZ;
-                                            generationCodeWriter.write("LevelGenBase.setBlockAndMetadata(world, baseX + " + offsetX + ", baseY + " + offsetY + ", baseZ + " + offsetZ + ", " + blockIDString + ", " + metadata + "); //" + blockName + NEW_LINE);
-                                            handleSigns(world, i, j, k, offsetX, offsetY, offsetZ, generationCodeWriter);
-                                            handleTargetBoxes(world, i, j, k, offsetX, offsetY, offsetZ, x - startX, y - startY, z - startZ, generationCodeWriter);
-                                        }
-                                    }
-                                }
-                                generationCodeWriter.write("return true;" + NEW_LINE);
-                                generationCodeWriter.write("}" + NEW_LINE + "}"); // close the method and class body.
-                                generationCodeWriter.close();
+                                new Converter(world, new ChunkPosition(startX, startY, startZ), new ChunkPosition(x, y, z), difficulty + "Level" + (levelNumber % 1000 + 1) + "Gen");
                                 player.addChatMessage(new ChatComponentText("\u00a72[Level Converter] Succesfully saved the generation code in '" + generationCodeFile.getName() + "'"));
                             } else {
                                 player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "[Level Converter] " + generationCodeFile.getName() + " already exists!"));
@@ -223,6 +110,7 @@ public class ItemLevelConverter extends Item{
                         }
                     } catch(Exception e) {
                         player.addChatMessage(new ChatComponentText("\u00a7C[Level Converter] Exception: " + e.getMessage() + ", report this back to MineMaarten please!"));
+                        e.printStackTrace();
                     }
                 }
             } else {

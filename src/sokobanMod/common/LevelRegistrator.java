@@ -7,42 +7,28 @@ import java.util.Random;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import sokobanMod.common.gen.ISokobanLevel;
-import sokobanMod.common.gen.easy.EasyLevel1Gen;
-import sokobanMod.common.gen.easy.EasyLevel2Gen;
-import sokobanMod.common.gen.easy.EasyLevel3Gen;
-import sokobanMod.common.gen.easy.EasyLevel4Gen;
-import sokobanMod.common.gen.easy.EasyLevel5Gen;
-import sokobanMod.common.gen.easy.EasyLevel6Gen;
-import sokobanMod.common.gen.hard.HardLevel1Gen;
-import sokobanMod.common.gen.medium.MediumLevel1Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel1Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel2Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel3Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel4Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel5Gen;
-import sokobanMod.common.gen.tutorial.TutorialLevel6Gen;
 
 public class LevelRegistrator{
     public static List<ISokobanLevel> sokobanLevels = new ArrayList<ISokobanLevel>();
 
     static {
-        sokobanLevels.add(new TutorialLevel1Gen());
-        sokobanLevels.add(new TutorialLevel2Gen());
-        sokobanLevels.add(new TutorialLevel3Gen());
-        sokobanLevels.add(new TutorialLevel4Gen());
-        sokobanLevels.add(new TutorialLevel5Gen());
-        sokobanLevels.add(new TutorialLevel6Gen());
+        /* sokobanLevels.add(new TutorialLevel1Gen());
+         sokobanLevels.add(new TutorialLevel2Gen());
+         sokobanLevels.add(new TutorialLevel3Gen());
+         sokobanLevels.add(new TutorialLevel4Gen());
+         sokobanLevels.add(new TutorialLevel5Gen());
+         sokobanLevels.add(new TutorialLevel6Gen());
 
-        sokobanLevels.add(new EasyLevel1Gen());
-        sokobanLevels.add(new EasyLevel2Gen());
-        sokobanLevels.add(new EasyLevel3Gen());
-        sokobanLevels.add(new EasyLevel4Gen());
-        sokobanLevels.add(new EasyLevel5Gen());
-        sokobanLevels.add(new EasyLevel6Gen());
+         sokobanLevels.add(new EasyLevel1Gen());
+         sokobanLevels.add(new EasyLevel2Gen());
+         sokobanLevels.add(new EasyLevel3Gen());
+         sokobanLevels.add(new EasyLevel4Gen());
+         sokobanLevels.add(new EasyLevel5Gen());
+         sokobanLevels.add(new EasyLevel6Gen());
 
-        sokobanLevels.add(new MediumLevel1Gen());
+         sokobanLevels.add(new MediumLevel1Gen());
 
-        sokobanLevels.add(new HardLevel1Gen());
+         sokobanLevels.add(new HardLevel1Gen());*/
     }
 
     public static int[] getLevelBounds(int level){

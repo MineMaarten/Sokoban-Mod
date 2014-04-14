@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
-import sokobanMod.common.network.PacketPlaySound;
+import net.minecraftforge.common.util.ForgeDirection;
 import sokobanMod.common.network.PacketSpawnParticle;
 
 /**
@@ -36,49 +36,16 @@ public class BlockVaporizingBlock extends Block{
     }
 
     private void vaporateNeigbours(World world, int x, int y, int z){
-        int neighbourX = x;
-        int neighbourY = y;
-        int neighbourZ = z;
-
         world.setBlock(x, y, z, Blocks.air);
-        // TODO (I am getting an error here telling me that "world" is not a valid TargetPoint)
-        // SokobanMod.packetPipeline.sendToAllAround(new PacketPlaySound("sokobanmod:vaporize", x, y, z, 0.2F, 1.0F, true), world);
-        
-        /**
-         * @deprecated
-         */
-        // world.playSoundEffect(x, y, z, "sokobanmod:vaporize", 0.2F, 1.0F);
-
+        world.playSoundEffect(x, y, z, "sokobanmod:vaporize", 0.2F, 1.0F);
         spawnParticle("explode", x + 0.5D, y + 0.5D, z + 0.5D, 0.0D, 0.0D, 0.0D);
-        for(int neighbour = 0; neighbour <= 5; neighbour++) {
-            switch(neighbour){
-                case 0:
-                    neighbourX = x - 1;
-                    break;
-                case 1:
-                    neighbourX = x + 1;
-                    break;
-                case 2:
-                    neighbourX = x;
-                    neighbourY = y - 1;
-                    break;
-                case 3:
-                    neighbourY = y + 1;
-                    break;
-                case 4:
-                    neighbourY = y;
-                    neighbourZ = z - 1;
-                    break;
-                case 5:
-                    neighbourZ = z + 1;
-            }
-            // TODO (this might be incorrect)
-            world.scheduleBlockUpdate(neighbourX, neighbourY, neighbourZ, world.getBlock(x, y, z), 2);
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            world.scheduleBlockUpdate(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, this, 2);
         }
     }
 
     private void spawnParticle(String string, double g, double h, double i, double d, double e, double f){
-    	SokobanMod.packetPipeline.sendToAll(new PacketSpawnParticle(string, g, h, i, d, e, f));
+        SokobanMod.packetPipeline.sendToAll(new PacketSpawnParticle(string, g, h, i, d, e, f));
     }
 
 }
